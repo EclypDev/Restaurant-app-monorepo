@@ -1,0 +1,197 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.platillo-modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--gray-light);
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+}
+
+.platillo-modal h2 {
+  margin-bottom: 10px;
+}
+
+.modal-desc {
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+
+.modal-base-price {
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.opciones-section {
+  margin: 25px 0;
+}
+
+.opciones-section h3 {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--gray-light);
+}
+
+.opcion-grupo {
+  margin-bottom: 20px;
+}
+
+.opcion-grupo h4 {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.max-seleccion {
+  font-size: 0.85rem;
+  color: var(--gray);
+  font-weight: 400;
+}
+
+.opcion-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.opcion-item {
+  padding: 10px 15px;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.opcion-item:hover {
+  border-color: var(--primary);
+}
+
+.opcion-item.selected {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.1);
+}
+
+.extra-price {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.notas-section {
+  margin: 20px 0;
+}
+
+.notas-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.notas-section textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid var(--gray-light);
+}
+
+.cantidad-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.cantidad-selector button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gray-light);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.cantidad-selector span {
+  font-size: 1.3rem;
+  font-weight: 600;
+  min-width: 30px;
+  text-align: center;
+}
+
+.modal-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.modal-total strong {
+  color: var(--primary);
+  font-size: 1.4rem;
+}
+
+.btn-agregar {
+  background: var(--primary);
+  color: var(--white);
+  padding: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-agregar:hover {
+  background: var(--primary-dark);
+}

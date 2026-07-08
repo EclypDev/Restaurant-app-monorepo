@@ -1,0 +1,16 @@
+.qr-generator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+}
+
+.qr-url {
+  font-size: 0.75rem;
+  color: var(--gray);
+  word-break: break-all;
+  text-align: center;
+}

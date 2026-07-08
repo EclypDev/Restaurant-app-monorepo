@@ -1,0 +1,59 @@
+.platillo-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.platillo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.platillo-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.platillo-content {
+  padding: 15px;
+}
+
+.platillo-content h3 {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.platillo-desc {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.platillo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.platillo-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.badge-custom {
+  background: var(--secondary);
+  color: var(--white);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}

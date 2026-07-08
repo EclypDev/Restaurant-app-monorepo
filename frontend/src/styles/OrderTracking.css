@@ -1,0 +1,114 @@
+.tracking-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 20px;
+}
+
+.tracking-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.tracking-card h2 {
+  margin-bottom: 10px;
+}
+
+.order-id {
+  color: var(--gray);
+  margin-bottom: 30px;
+}
+
+.tracking-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.tracking-steps::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gray-light);
+  z-index: 0;
+}
+
+.tracking-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  transition: all 0.3s;
+}
+
+.tracking-step.completed .step-icon {
+  background: var(--success);
+}
+
+.tracking-step.active .step-icon {
+  background: var(--primary);
+  animation: pulse 2s infinite;
+}
+
+.step-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.order-summary {
+  text-align: left;
+  background: var(--gray-light);
+  padding: 20px;
+  border-radius: var(--radius-sm);
+}
+
+.order-summary h3 {
+  margin-bottom: 15px;
+}
+
+.order-summary ul {
+  list-style: none;
+  margin-bottom: 15px;
+}
+
+.order-summary li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.order-total {
+  text-align: right;
+  font-size: 1.2rem;
+  padding-top: 15px;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+}
