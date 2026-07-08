@@ -1,19 +1,31 @@
 import { create } from 'zustand'
-import { io } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
+import { IIngredienteUpdateEvent } from '../../shared/interfaces'
+
+interface InventoryState {
+  ingredientes: Array<{ _id: string; nombre: string; disponible: boolean; stock: number }>
+  agotados: Set<string>
+  loading: boolean
+  socket: Socket | null
+  fetchInventory: () => Promise<void>
+  initSocket: () => void
+  cleanup: () => void
+}
 
 const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000')
 
-const useInventoryStore = create((set) => ({
+const useInventoryStore = create<InventoryState>((set) => ({
   ingredientes: [],
   agotados: new Set(),
   loading: true,
+  socket,
 
   fetchInventory: async () => {
     try {
       const response = await fetch('/api/inventario')
       const data = await response.json()
       const agotados = new Set(
-        data.filter(i => !i.disponible).map(i => i._id)
+        data.filter((i: any) => !i.disponible).map((i: any) => i._id)
       )
       set({ ingredientes: data, agotados, loading: false })
     } catch (error) {
@@ -23,7 +35,7 @@ const useInventoryStore = create((set) => ({
   },
 
   initSocket: () => {
-    socket.on('ingrediente-agotado', (data) => {
+    socket.on('ingrediente-agotado', (data: IIngredienteUpdateEvent) => {
       set((state) => {
         const newAgotados = new Set(state.agotados)
         newAgotados.add(data.id)
@@ -31,7 +43,7 @@ const useInventoryStore = create((set) => ({
       })
     })
 
-    socket.on('ingrediente-disponible', (data) => {
+    socket.on('ingrediente-disponible', (data: IIngredienteUpdateEvent) => {
       set((state) => {
         const newAgotados = new Set(state.agotados)
         newAgotados.delete(data.id)

@@ -8,13 +8,16 @@
     "shared"
   ],
   "scripts": {
+    "build:shared": "npm run build --workspace=shared",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build": "npm run build --workspaces",
-    "start": "npm run start --workspace=backend"
+    "build": "npm run build:shared && npm run build --workspaces --if-present",
+    "start": "npm run start --workspace=backend",
+    "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
   }
 }

@@ -1,12 +1,25 @@
 import { create } from 'zustand'
+import { IOrderItem } from '../../shared/interfaces'
 
-const useCartStore = create((set, get) => ({
+interface CartState {
+  items: IOrderItem[]
+  mesaId: string | null
+  setMesaId: (mesaId: string) => void
+  addItem: (item: IOrderItem) => void
+  removeItem: (index: number) => void
+  updateCantidad: (index: number, cantidad: number) => void
+  clearCart: () => void
+  getTotal: () => number
+  getItemCount: () => number
+}
+
+const useCartStore = create<CartState>((set, get) => ({
   items: [],
   mesaId: null,
 
-  setMesaId: (mesaId) => set({ mesaId }),
+  setMesaId: (mesaId: string) => set({ mesaId }),
 
-  addItem: (item) => set((state) => {
+  addItem: (item: IOrderItem) => set((state) => {
     const existingIndex = state.items.findIndex(
       (i) => i.platilloId === item.platilloId && JSON.stringify(i.eleccionUsuario) === JSON.stringify(item.eleccionUsuario)
     )
@@ -17,14 +30,14 @@ const useCartStore = create((set, get) => ({
       return { items: newItems }
     }
 
-    return { items: [...state.items, item] })
+    return { items: [...state.items, item] }
   }),
 
-  removeItem: (index) => set((state) => ({
+  removeItem: (index: number) => set((state) => ({
     items: state.items.filter((_, i) => i !== index)
   })),
 
-  updateCantidad: (index, cantidad) => set((state) => {
+  updateCantidad: (index: number, cantidad: number) => set((state) => {
     if (cantidad <= 0) {
       return { items: state.items.filter((_, i) => i !== index) }
     }
