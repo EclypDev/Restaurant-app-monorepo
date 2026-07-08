@@ -30,11 +30,19 @@ const menuRoutes = require('./routes/menu.routes');
 const orderRoutes = require('./routes/order.routes');
 const authRoutes = require('./routes/auth.routes');
 const tableRoutes = require('./routes/table.routes');
+const inventoryRoutes = require('./routes/inventory.routes');
+const recommendationsRoutes = require('./routes/recommendations.routes');
+const reviewRoutes = require('./routes/review.routes');
+const paymentRoutes = require('./routes/payment.routes');
 
 app.use('/api/menu', menuRoutes);
 app.use('/api/pedidos', orderRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/mesas', tableRoutes);
+app.use('/api/inventario', inventoryRoutes);
+app.use('/api/recomendaciones', recommendationsRoutes);
+app.use('/api/resenas', reviewRoutes);
+app.use('/api/pago', paymentRoutes);
 
 // WebSocket Connection
 io.on('connection', (socket) => {
@@ -43,6 +51,11 @@ io.on('connection', (socket) => {
   socket.on('join-kitchen', () => {
     socket.join('kitchen');
     console.log('👨‍🍳 Client joined kitchen room');
+  });
+
+  socket.on('join-meseros', () => {
+    socket.join('meseros');
+    console.log('🧑‍🍳 Client joined meseros room');
   });
 
   socket.on('join-table', (tableId) => {

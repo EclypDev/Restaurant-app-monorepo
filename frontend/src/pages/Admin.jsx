@@ -12,6 +12,8 @@ export default function Admin() {
   const [platillos, setPlatillos] = useState([])
   const [mesas, setMesas] = useState([])
   const [ordenes, setOrdenes] = useState([])
+  const [ingredientes, setIngredientes] = useState([])
+  const [resenas, setResenas] = useState([])
   const [showPlatilloForm, setShowPlatilloForm] = useState(false)
   const [showMesaForm, setShowMesaForm] = useState(false)
   const [editingPlatillo, setEditingPlatillo] = useState(null)
@@ -30,14 +32,18 @@ export default function Admin() {
 
   const fetchData = async () => {
     try {
-      const [platillosRes, mesasRes, ordenesRes] = await Promise.all([
+      const [platillosRes, mesasRes, ordenesRes, ingredientesRes, resenasRes] = await Promise.all([
         axios.get('/api/menu'),
         axios.get('/api/mesas'),
         axios.get('/api/pedidos'),
+        axios.get('/api/inventario'),
+        axios.get('/api/resenas'),
       ])
       setPlatillos(platillosRes.data)
       setMesas(mesasRes.data)
       setOrdenes(ordenesRes.data)
+      setIngredientes(ingredientesRes.data)
+      setResenas(resenasRes.data)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -68,8 +74,14 @@ export default function Admin() {
         <button className={activeTab === 'mesas' ? 'active' : ''} onClick={() => setActiveTab('mesas')}>
           🪑 Mesas
         </button>
+        <button className={activeTab === 'inventario' ? 'active' : ''} onClick={() => setActiveTab('inventario')}>
+          📦 Inventario
+        </button>
         <button className={activeTab === 'ordenes' ? 'active' : ''} onClick={() => setActiveTab('ordenes')}>
           📦 Órdenes
+        </button>
+        <button className={activeTab === 'resenas' ? 'active' : ''} onClick={() => setActiveTab('resenas')}>
+          ⭐ Reseñas
         </button>
       </nav>
 
@@ -91,8 +103,22 @@ export default function Admin() {
           />
         )}
 
+        {activeTab === 'inventario' && (
+          <InventarioTab
+            ingredientes={ingredientes}
+            onRefresh={fetchData}
+          />
+        )}
+
         {activeTab === 'ordenes' && (
           <OrdenesTab ordenes={ordenes} />
+        )}
+
+        {activeTab === 'resenas' && (
+          <ResenasTab
+            resenas={resenas}
+            onRefresh={fetchData}
+          />
         )}
       </main>
 
@@ -197,6 +223,55 @@ function MesasTab({ mesas, onRefresh, onAdd }) {
   )
 }
 
+function InventarioTab({ ingredientes, onRefresh }) {
+  const toggleDisponibilidad = async (id, disponible) => {
+    try {
+      await axios.patch(`/api/inventario/${id}/disponibilidad`, { disponible: !disponible })
+      onRefresh()
+    } catch (error) {
+      console.error('Error updating ingredient:', error)
+    }
+  }
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h3>Inventario de Ingredientes</h3>
+      </div>
+
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Stock</th>
+            <th>Disponible</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ingredientes.map(ing => (
+            <tr key={ing._id} className={!ing.disponible ? 'row-agotado' : ''}>
+              <td>{ing.nombre}</td>
+              <td>{ing.categoria}</td>
+              <td>{ing.stock} {ing.unidad}</td>
+              <td>{ing.disponible ? '✅' : '❌ Agotado'}</td>
+              <td>
+                <button
+                  onClick={() => toggleDisponibilidad(ing._id, ing.disponible)}
+                  className="btn-small"
+                >
+                  {ing.disponible ? 'Marcar Agotado' : 'Marcar Disponible'}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 function OrdenesTab({ ordenes }) {
   return (
     <div className="tab-content">
@@ -208,6 +283,7 @@ function OrdenesTab({ ordenes }) {
             <th>Mesa</th>
             <th>Estado</th>
             <th>Total</th>
+            <th>Pago</th>
             <th>Fecha</th>
           </tr>
         </thead>
@@ -218,7 +294,56 @@ function OrdenesTab({ ordenes }) {
               <td>{o.mesaId}</td>
               <td><span className={`estado-badge estado-${o.estado.toLowerCase()}`}>{o.estado}</span></td>
               <td>${o.totalPagar.toLocaleString()}</td>
+              <td>{o.pagado ? '✅' : '⏳'}</td>
               <td>{new Date(o.createdAt).toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function ResenasTab({ resenas, onRefresh }) {
+  const resolverResena = async (id) => {
+    try {
+      await axios.patch(`/api/resenas/${id}/resolver`, { respuestaAdmin: 'Resuelto' })
+      onRefresh()
+    } catch (error) {
+      console.error('Error resolving review:', error)
+    }
+  }
+
+  return (
+    <div className="tab-content">
+      <h3>Reseñas de Clientes</h3>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Mesa</th>
+            <th>Estrellas</th>
+            <th>Categoría</th>
+            <th>Comentario</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {resenas.map(r => (
+            <tr key={r._id} className={r.estrellas <= 2 ? 'row-alerta' : ''}>
+              <td>{r.mesaId}</td>
+              <td>{'⭐'.repeat(r.estrellas)}</td>
+              <td>{r.categoria}</td>
+              <td>{r.comentario || '-'}</td>
+              <td>{new Date(r.createdAt).toLocaleString()}</td>
+              <td>
+                {!r.resuelto && r.estrellas <= 2 && (
+                  <button onClick={() => resolverResena(r._id)} className="btn-small">
+                    Resolver
+                  </button>
+                )}
+                {r.resuelto && <span className="resuelto-badge">✅ Resuelto</span>}
+              </td>
             </tr>
           ))}
         </tbody>

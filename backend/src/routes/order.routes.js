@@ -25,6 +25,22 @@ router.post('/', async (req, res) => {
     const io = req.app.get('io');
     io.to('kitchen').emit('nueva-orden-cocina', nuevaOrden);
 
+    // Print comanda if printer enabled
+    if (process.env.PRINTER_ENABLED === 'true') {
+      try {
+        const { printTicket } = require('../services/printer');
+        await printTicket({
+          mesaId,
+          ordenId: nuevaOrden._id,
+          items,
+          total: totalPagar,
+          tipo: 'COMANDA',
+        });
+      } catch (printError) {
+        console.error('Print error:', printError.message);
+      }
+    }
+
     res.status(201).json({ success: true, orden: nuevaOrden });
   } catch (error) {
     res.status(500).json({ message: 'Error creating order', error: error.message });

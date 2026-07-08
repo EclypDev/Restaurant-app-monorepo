@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import io from 'socket.io-client'
 import axios from 'axios'
@@ -11,6 +11,7 @@ export default function Cocina() {
   const { user, loading } = useAuth()
   const navigate = useNavigate()
   const [pedidos, setPedidos] = useState([])
+  const [now, setNow] = useState(Date.now())
 
   useEffect(() => {
     if (!loading && (!user || (user.rol !== 'cocina' && user.rol !== 'admin'))) {
@@ -38,14 +39,22 @@ export default function Cocina() {
     }
   }, [user, loading, navigate])
 
-  const fetchPedidos = async () => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(Date.now())
+    }, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const fetchPedidos = useCallback(async () => {
     try {
       const { data } = await axios.get('/api/pedidos?estado=PENDIENTE,EN_PREPARACION')
       setPedidos(data)
     } catch (error) {
       console.error('Error fetching pedidos:', error)
     }
-  }
+  }, [])
 
   const actualizarEstado = async (id, estado) => {
     try {
@@ -74,6 +83,7 @@ export default function Cocina() {
             <PedidoCard
               key={pedido._id}
               pedido={pedido}
+              now={now}
               onAction={() => actualizarEstado(pedido._id, 'EN_PREPARACION')}
               actionLabel="En Preparación"
               actionClass="btn-preparacion"
@@ -87,6 +97,7 @@ export default function Cocina() {
             <PedidoCard
               key={pedido._id}
               pedido={pedido}
+              now={now}
               onAction={() => actualizarEstado(pedido._id, 'ENTREGADO')}
               actionLabel="Entregado"
               actionClass="btn-entregado"
@@ -98,16 +109,25 @@ export default function Cocina() {
   )
 }
 
-function PedidoCard({ pedido, onAction, actionLabel, actionClass }) {
-  const tiempoTranscurrido = Math.floor(
-    (Date.now() - new Date(pedido.createdAt).getTime()) / 60000
+function PedidoCard({ pedido, now, onAction, actionLabel, actionClass }) {
+  const minutosTranscurridos = Math.floor(
+    (now - new Date(pedido.createdAt).getTime()) / 60000
   )
 
+  let estadoColor = 'verde'
+  if (minutosTranscurridos >= 20) {
+    estadoColor = 'rojo'
+  } else if (minutosTranscurridos >= 10) {
+    estadoColor = 'amarillo'
+  }
+
   return (
-    <div className={`pedido-card estado-${pedido.estado.toLowerCase()}`}>
+    <div className={`pedido-card estado-${pedido.estado.toLowerCase()} semaforo-${estadoColor}`}>
       <div className="pedido-header">
         <span className="mesa-label">📍 {pedido.mesaId}</span>
-        <span className="tiempo-label">{tiempoTranscurrido} min</span>
+        <span className={`tiempo-label tiempo-${estadoColor}`}>
+          {minutosTranscurridos} min
+        </span>
       </div>
 
       <ul className="pedido-items">

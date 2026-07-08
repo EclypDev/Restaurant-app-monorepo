@@ -25,8 +25,18 @@ const ordenSchema = new mongoose.Schema({
   totalPagar: { type: Number, required: true },
   restauranteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurante' },
   entregadoAt: { type: Date },
+  solicitudPago: {
+    activo: { type: Boolean, default: false },
+    tipo: { type: String, enum: ['EFECTIVO', 'TARJETA', 'TRANSFERENCIA'] },
+    solicitadoAt: { type: Date },
+    atendidoAt: { type: Date },
+  },
+  metodoPago: { type: String, enum: ['EFECTIVO', 'TARJETA', 'TRANSFERENCIA'] },
+  pagado: { type: Boolean, default: false },
+  pagadoAt: { type: Date },
 }, { timestamps: true });
 
 ordenSchema.index({ createdAt: -1 });
+ordenSchema.index({ mesaId: 1, estado: 1 });
 
 module.exports = mongoose.model('Orden', ordenSchema);

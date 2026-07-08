@@ -1,0 +1,121 @@
+.mesero-container {
+  min-height: 100vh;
+  background: var(--dark-light);
+  color: var(--white);
+  padding: 20px;
+}
+
+.mesero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-info {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+}
+
+.mesero-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.mesero-column h3 {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+}
+
+.solicitud-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--warning);
+  transition: all 0.3s;
+}
+
+.solicitud-card.atendida {
+  opacity: 0.5;
+  border-left-color: var(--success);
+}
+
+.solicitud-card.tipo-pago {
+  border-left-color: var(--secondary);
+}
+
+.solicitud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.mesa-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.tiempo {
+  background: var(--primary);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+}
+
+.solicitud-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tipo-badge {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.tipo-pago {
+  background: rgba(0, 78, 137, 0.2);
+  color: #4da6ff;
+}
+
+.tipo-mesero {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--warning);
+}
+
+.monto {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.solicitud-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-atender {
+  flex: 1;
+  padding: 12px;
+  background: var(--success);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.btn-eliminar {
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+}

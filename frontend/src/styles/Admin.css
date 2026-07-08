@@ -31,6 +31,7 @@
   padding: 20px 30px;
   background: var(--white);
   box-shadow: var(--shadow);
+  overflow-x: auto;
 }
 
 .admin-tabs button {
@@ -38,6 +39,7 @@
   border-radius: var(--radius-sm);
   background: var(--gray-light);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .admin-tabs button.active {
@@ -82,6 +84,14 @@
 
 .data-table tr:hover {
   background: rgba(255, 107, 53, 0.05);
+}
+
+.data-table tr.row-agotado {
+  background: rgba(244, 67, 54, 0.05);
+}
+
+.data-table tr.row-alerta {
+  background: rgba(244, 67, 54, 0.1);
 }
 
 .btn-primary {
@@ -155,6 +165,11 @@
 .estado-cancelado {
   background: rgba(244, 67, 54, 0.2);
   color: var(--danger);
+}
+
+.resuelto-badge {
+  font-size: 0.85rem;
+  color: var(--success);
 }
 
 .modal-overlay {

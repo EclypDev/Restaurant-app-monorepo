@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import useCartStore from '../store/cartStore'
+import useInventoryStore from '../store/inventoryStore'
 import '../styles/PlatilloModal.css'
 
 export default function PlatilloModal({ platillo, onClose }) {
@@ -8,6 +9,7 @@ export default function PlatilloModal({ platillo, onClose }) {
   const [selecciones, setSelecciones] = useState({})
 
   const addItem = useCartStore((state) => state.addItem)
+  const ingredientesAgotados = useInventoryStore((state) => state.agotados)
 
   const precioTotal = useMemo(() => {
     let total = platillo.precioBase
@@ -25,6 +27,15 @@ export default function PlatilloModal({ platillo, onClose }) {
     return total * cantidad
   }, [platillo, selecciones, cantidad])
 
+  const capasActivas = useMemo(() => {
+    if (!platillo.capasVisuales) return []
+    
+    return platillo.capasVisuales.filter(capa => {
+      const seleccionados = Object.values(selecciones).flat()
+      return seleccionados.includes(capa.ingredienteId)
+    }).sort((a, b) => a.posicion.z - b.posicion.z)
+  }, [platillo.capasVisuales, selecciones])
+
   const handleSeleccion = (grupo, itemNombre) => {
     setSelecciones(prev => {
       const current = prev[grupo] || []
@@ -40,6 +51,11 @@ export default function PlatilloModal({ platillo, onClose }) {
 
       return { ...prev, [grupo]: [...current, itemNombre] }
     })
+  }
+
+  const esIngredienteAgotado = (item) => {
+    if (!item.ingredienteId) return false
+    return ingredientesAgotados.has(item.ingredienteId)
   }
 
   const handleAgregar = () => {
@@ -67,9 +83,28 @@ export default function PlatilloModal({ platillo, onClose }) {
       <div className="platillo-modal" onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        {platillo.imagenUrl && (
-          <img src={platillo.imagenUrl} alt={platillo.nombre} className="modal-img" />
-        )}
+        <div className="dish-visual">
+          {platillo.imagenBase && (
+            <img src={platillo.imagenBase} alt={platillo.nombre} className="dish-base" />
+          )}
+          {capasActivas.map((capa, idx) => (
+            <img
+              key={idx}
+              src={capa.imagenUrl}
+              alt=""
+              className="dish-layer"
+              style={{
+                left: `${capa.posicion.x}%`,
+                top: `${capa.posicion.y}%`,
+                transform: `scale(${capa.escala})`,
+                zIndex: capa.posicion.z,
+              }}
+            />
+          ))}
+          {!platillo.imagenBase && platillo.imagenUrl && (
+            <img src={platillo.imagenUrl} alt={platillo.nombre} className="dish-base" />
+          )}
+        </div>
 
         <h2>{platillo.nombre}</h2>
         <p className="modal-desc">{platillo.descripcion}</p>
@@ -89,14 +124,17 @@ export default function PlatilloModal({ platillo, onClose }) {
                 <div className="opcion-items">
                   {grupo.items.map(item => {
                     const isSelected = (selecciones[grupo.grupo] || []).includes(item.nombre)
+                    const agotado = esIngredienteAgotado(item)
                     return (
                       <button
                         key={item.nombre}
-                        className={`opcion-item ${isSelected ? 'selected' : ''}`}
-                        onClick={() => handleSeleccion(grupo.grupo, item.nombre)}
+                        className={`opcion-item ${isSelected ? 'selected' : ''} ${agotado ? 'agotado' : ''}`}
+                        onClick={() => !agotado && handleSeleccion(grupo.grupo, item.nombre)}
+                        disabled={agotado}
                       >
                         <span>{item.nombre}</span>
-                        {item.precioExtra > 0 && (
+                        {agotado && <span className="agotado-badge">Agotado</span>}
+                        {!agotado && item.precioExtra > 0 && (
                           <span className="extra-price">+${item.precioExtra.toLocaleString()}</span>
                         )}
                       </button>

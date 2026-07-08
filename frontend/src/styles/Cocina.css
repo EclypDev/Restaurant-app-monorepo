@@ -38,11 +38,26 @@
   border-radius: var(--radius);
   padding: 20px;
   margin-bottom: 20px;
-  border-left: 4px solid var(--warning);
+  border-left: 4px solid var(--success);
+  transition: border-color 0.3s;
 }
 
 .pedido-card.estado-en_preparacion {
   border-left-color: var(--primary);
+}
+
+.pedido-card.semaforo-amarillo {
+  border-left-color: var(--warning);
+}
+
+.pedido-card.semaforo-rojo {
+  border-left-color: var(--danger);
+  animation: pulse-border 1s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-left-color: var(--danger); }
+  50% { border-left-color: transparent; }
 }
 
 .pedido-header {
@@ -58,10 +73,31 @@
 }
 
 .tiempo-label {
-  background: var(--primary);
   padding: 5px 12px;
   border-radius: 15px;
   font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tiempo-verde {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--success);
+}
+
+.tiempo-amarillo {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--warning);
+}
+
+.tiempo-rojo {
+  background: rgba(244, 67, 54, 0.2);
+  color: var(--danger);
+  animation: pulse-bg 1s infinite;
+}
+
+@keyframes pulse-bg {
+  0%, 100% { background: rgba(244, 67, 54, 0.2); }
+  50% { background: rgba(244, 67, 54, 0.4); }
 }
 
 .pedido-items {

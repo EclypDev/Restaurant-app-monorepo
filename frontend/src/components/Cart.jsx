@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useCartStore from '../store/cartStore'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -12,9 +12,40 @@ export default function Cart() {
   const removeItem = useCartStore((state) => state.removeItem)
   const updateCantidad = useCartStore((state) => state.updateCantidad)
   const clearCart = useCartStore((state) => state.clearCart)
+  const addItem = useCartStore((state) => state.addItem)
   const navigate = useNavigate()
 
   const [isOpen, setIsOpen] = useState(false)
+  const [recomendaciones, setRecomendaciones] = useState([])
+
+  useEffect(() => {
+    if (items.length > 0) {
+      fetchRecomendaciones()
+    }
+  }, [items])
+
+  const fetchRecomendaciones = async () => {
+    try {
+      const { data } = await axios.post('/api/recomendaciones', {
+        cartItems: items.map(i => ({ platilloId: i.platilloId })),
+        mesaId,
+      })
+      setRecomendaciones(data)
+    } catch {
+      setRecomendaciones([])
+    }
+  }
+
+  const handleAddRecomendacion = (platillo) => {
+    addItem({
+      platilloId: platillo._id,
+      nombre: platillo.nombre,
+      cantidad: 1,
+      precioUnitario: platillo.precioBase,
+      eleccionUsuario: [],
+      notasEspeciales: '',
+    })
+  }
 
   const handleCheckout = async () => {
     if (!mesaId) {
@@ -76,6 +107,26 @@ export default function Cart() {
                 </div>
               ))}
             </div>
+
+            {recomendaciones.length > 0 && (
+              <div className="cart-recommendations">
+                <h4>¿Quieres agregar algo más?</h4>
+                <div className="recommendation-list">
+                  {recomendaciones.map(rec => (
+                    <div key={rec._id} className="recommendation-item">
+                      <div className="rec-info">
+                        <strong>{rec.nombre}</strong>
+                        <span className="rec-motivo">{rec.motivo}</span>
+                      </div>
+                      <div className="rec-actions">
+                        <span className="rec-price">${rec.precioBase.toLocaleString()}</span>
+                        <button onClick={() => handleAddRecomendacion(rec)}>+ Agregar</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="cart-footer">
               <div className="cart-total">

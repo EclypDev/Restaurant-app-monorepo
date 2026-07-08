@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Menu from './pages/Menu'
 import Cocina from './pages/Cocina'
+import Mesero from './pages/Mesero'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import OrderTracking from './pages/OrderTracking'
@@ -14,6 +15,7 @@ function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/order/:orderId" element={<OrderTracking />} />
           <Route path="/cocina" element={<Cocina />} />
+          <Route path="/meseros" element={<Mesero />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Menu />} />

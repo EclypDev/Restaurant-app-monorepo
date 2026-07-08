@@ -68,6 +68,14 @@
   padding: 30px 20px;
 }
 
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray);
+  font-size: 1.1rem;
+}
+
 .loading {
   display: flex;
   justify-content: center;
