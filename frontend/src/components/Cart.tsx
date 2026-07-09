@@ -55,7 +55,7 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     if (!mesaId) {
-      toast('No se detectó el número de mesa. Escanee el QR nuevamente.', 'error')
+      toast('No se detectó el número de mesa. Por favor, selecciona una mesa disponible en el mapa.', 'error')
       return
     }
 
@@ -75,57 +75,71 @@ export default function Cart() {
 
   if (items.length === 0) return null
 
+  const itemCount = getItemCount()
+
   return (
     <>
-      <button className="cart-toggle" onClick={() => setIsOpen(!isOpen)}>
-        🛒 {getItemCount()} items - ${getTotal().toLocaleString()}
+      <button className="cart-toggle premium-gradient-btn" onClick={() => setIsOpen(!isOpen)}>
+        {itemCount} {itemCount === 1 ? 'item' : 'items'} - ${getTotal().toLocaleString()} COP
       </button>
 
       {isOpen && (
-        <div className="cart-overlay" onClick={() => setIsOpen(false)}>
-          <div className="cart-sidebar" onClick={e => e.stopPropagation()}>
-            <div className="cart-header">
+        <div className="cart-overlay premium-blur" onClick={() => setIsOpen(false)}>
+          <div className="cart-sidebar dark-premium" onClick={e => e.stopPropagation()}>
+            <div className="cart-header-premium">
               <h3>Tu Pedido</h3>
-              <button onClick={() => setIsOpen(false)}>✕</button>
+              <button className="close-cart-btn" onClick={() => setIsOpen(false)}>✕</button>
             </div>
 
-            <div className="cart-items">
+            <div className="cart-items-premium">
               {items.map((item, idx) => (
-                <div key={idx} className="cart-item">
+                <div key={idx} className="cart-item-premium">
                   <div className="cart-item-info">
-                    <strong>{item.nombre}</strong>
+                    <strong className="item-name">{item.nombre}</strong>
                     {item.eleccionUsuario && item.eleccionUsuario.length > 0 && (
                       <div className="cart-item-options">
                         {item.eleccionUsuario.map((el, i) => (
-                          <span key={i}>{el.seleccionado.join(', ')}</span>
+                          <div key={i} className="option-row">
+                            <span className="option-group-label">{el.grupo}:</span>{' '}
+                            <span className="option-values">{el.seleccionado.join(', ')}</span>
+                          </div>
                         ))}
                       </div>
                     )}
-                    <div className="cart-item-price">${item.precioUnitario.toLocaleString()}</div>
+                    {item.notasEspeciales && (
+                      <div className="cart-item-notes">
+                        <span className="notes-label">Obs:</span> {item.notasEspeciales}
+                      </div>
+                    )}
+                    <div className="cart-item-price">${item.precioUnitario.toLocaleString()} COP</div>
                   </div>
-                  <div className="cart-item-actions">
-                    <button onClick={() => updateCantidad(idx, item.cantidad - 1)}>-</button>
-                    <span>{item.cantidad}</span>
-                    <button onClick={() => updateCantidad(idx, item.cantidad + 1)}>+</button>
-                    <button className="btn-remove" onClick={() => removeItem(idx)}>🗑️</button>
+                  <div className="cart-item-actions-premium">
+                    <div className="quantity-adjuster">
+                      <button onClick={() => updateCantidad(idx, item.cantidad - 1)}>-</button>
+                      <span>{item.cantidad}</span>
+                      <button onClick={() => updateCantidad(idx, item.cantidad + 1)}>+</button>
+                    </div>
+                    <button className="btn-remove-premium" onClick={() => removeItem(idx)}>
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
 
             {recomendaciones.length > 0 && (
-              <div className="cart-recommendations">
-                <h4>¿Quieres agregar algo más?</h4>
+              <div className="cart-recommendations dark-premium">
+                <h4>Sugerencias de la Casa</h4>
                 <div className="recommendation-list">
                   {recomendaciones.map(rec => (
-                    <div key={rec._id} className="recommendation-item">
+                    <div key={rec._id} className="recommendation-item dark-card">
                       <div className="rec-info">
                         <strong>{rec.nombre}</strong>
                         <span className="rec-motivo">{rec.motivo}</span>
                       </div>
                       <div className="rec-actions">
-                        <span className="rec-price">${rec.precioBase.toLocaleString()}</span>
-                        <button onClick={() => handleAddRecomendacion(rec)}>+ Agregar</button>
+                        <span className="rec-price">${rec.precioBase.toLocaleString()} COP</span>
+                        <button className="add-rec-btn" onClick={() => handleAddRecomendacion(rec)}>Agregar</button>
                       </div>
                     </div>
                   ))}
@@ -133,12 +147,12 @@ export default function Cart() {
               </div>
             )}
 
-            <div className="cart-footer">
-              <div className="cart-total">
+            <div className="cart-footer-premium">
+              <div className="cart-total-premium">
                 <span>Total:</span>
-                <strong>${getTotal().toLocaleString()}</strong>
+                <strong>${getTotal().toLocaleString()} COP</strong>
               </div>
-              <button className="btn-checkout" onClick={handleCheckout}>
+              <button className="btn-checkout-premium" onClick={handleCheckout}>
                 Confirmar Pedido
               </button>
             </div>
