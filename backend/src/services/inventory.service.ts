@@ -45,17 +45,15 @@ export class InventoryService {
 
   static async bulkUpdate(updates: Array<{ id: string; stockDisponible: boolean }>, io: any) {
     const results: any[] = []
-    for (const update of updates) {
-      try {
-        const ing = await prisma.ingrediente.update({
+    const settled = await Promise.allSettled(
+      updates.map(update =>
+        prisma.ingrediente.update({
           where: { id: update.id },
           data: { stockDisponible: update.stockDisponible }
         })
-        results.push(ing)
-      } catch (err) {
-        // Ignore if item not found
-      }
-    }
+      )
+    )
+    settled.forEach(r => { if (r.status === 'fulfilled') results.push(r.value) })
 
     try {
       results.forEach(ing => {

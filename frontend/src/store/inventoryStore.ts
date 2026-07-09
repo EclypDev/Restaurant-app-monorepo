@@ -25,7 +25,7 @@ const useInventoryStore = create<InventoryState>((set) => ({
       const response = await fetch('/api/inventario')
       const data = await response.json()
       const agotados = new Set(
-        data.filter((i: any) => !i.stockDisponible).map((i: any) => i._id)
+        data.filter((i: any) => !i.stockDisponible).map((i: any) => i.id)
       )
       set({ ingredientes: data, agotados, loading: false })
     } catch (error) {

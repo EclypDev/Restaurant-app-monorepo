@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useCartStore from '../store/cartStore'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -20,11 +20,14 @@ export default function Cart() {
 
   const [isOpen, setIsOpen] = useState(false)
   const [recomendaciones, setRecomendaciones] = useState<IRecomendacion[]>([])
+  const prevItemCount = useRef(0)
 
   useEffect(() => {
-    if (items.length > 0) {
+    const currentCount = getItemCount()
+    if (currentCount > 0 && currentCount !== prevItemCount.current) {
       fetchRecomendaciones()
     }
+    prevItemCount.current = currentCount
   }, [items])
 
   const fetchRecomendaciones = async () => {

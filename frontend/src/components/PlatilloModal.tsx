@@ -36,12 +36,12 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
   const capasActivas = useMemo(() => {
     if (!platillo.capasVisuales) return []
     
-    const seleccionados = Object.values(selecciones).flat()
+    const nombresSeleccionados = new Set(Object.values(selecciones).flat())
     const idsSeleccionados = new Set<string>()
     if (platillo.opcionesSeleccionables) {
       platillo.opcionesSeleccionables.forEach(grupo => {
         grupo.items.forEach(item => {
-          if (seleccionados.includes(item.nombre) && item.ingredienteId) {
+          if (nombresSeleccionados.has(item.nombre) && item.ingredienteId) {
             idsSeleccionados.add(item.ingredienteId)
           }
         })

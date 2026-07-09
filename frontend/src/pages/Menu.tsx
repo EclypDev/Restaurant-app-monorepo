@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useCartStore from '../store/cartStore'
@@ -64,7 +64,7 @@ export default function Menu() {
     }
   }
 
-  const platillosFiltrados = platillos.filter(p => {
+  const platillosFiltrados = useMemo(() => platillos.filter(p => {
     if (categoriaActiva && p.categoria !== categoriaActiva) return false
     
     if (alergenosActivos.length > 0) {
@@ -80,7 +80,7 @@ export default function Menu() {
     }
 
     return true
-  })
+  }), [platillos, categoriaActiva, alergenosActivos, ingredientesAgotados])
 
   if (loading) {
     return <div className="loading">Cargando menú...</div>
