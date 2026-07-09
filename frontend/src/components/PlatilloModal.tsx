@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import useCartStore from '../store/cartStore'
 import { IPlatillo } from '@shared'
+import { useToast } from './Toast'
 import '../styles/PlatilloModal.css'
 
 interface PlatilloModalProps {
@@ -34,6 +35,7 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
   const [cantidad, setCantidad] = useState(1)
 
   const addItem = useCartStore((state) => state.addItem)
+  const { toast } = useToast()
 
   // AI suggestions based on dish name
   const aiExtras = useMemo<Extra[]>(() => {
@@ -90,24 +92,30 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
   }
 
   const handleAgregar = () => {
-    const choices = [
-      { grupo: 'Bebida', seleccionado: [selectedBeverage.nombre] }
-    ]
+    try {
+      const choices = [
+        { grupo: 'Bebida', seleccionado: [selectedBeverage.nombre] }
+      ]
 
-    const activeExtrasList = aiExtras.filter(e => extrasSeleccionados.has(e.id)).map(e => e.nombre)
-    if (activeExtrasList.length > 0) {
-      choices.push({ grupo: 'Adicionales', seleccionado: activeExtrasList })
+      const activeExtrasList = aiExtras.filter(e => extrasSeleccionados.has(e.id)).map(e => e.nombre)
+      if (activeExtrasList.length > 0) {
+        choices.push({ grupo: 'Adicionales', seleccionado: activeExtrasList })
+      }
+
+      addItem({
+        platilloId: platillo._id,
+        nombre: platillo.nombre,
+        cantidad,
+        precioUnitario,
+        eleccionUsuario: choices,
+        notasEspeciales: observacion
+      })
+      toast(`${platillo.nombre} agregado al carrito`, 'success')
+      onClose()
+    } catch (err) {
+      console.error('Error al agregar al carrito:', err)
+      toast('Error al agregar al carrito', 'error')
     }
-
-    addItem({
-      platilloId: platillo._id,
-      nombre: platillo.nombre,
-      cantidad,
-      precioUnitario,
-      eleccionUsuario: choices,
-      notasEspeciales: observacion
-    })
-    onClose()
   }
 
   return (
@@ -191,11 +199,11 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
             <button onClick={() => setCantidad(cantidad + 1)}>+</button>
           </div>
           <div className="modal-total-price">
-            <span className="total-label">Total:</span>
+            <span className="total-label">Total ({cantidad} item{cantidad > 1 ? 's' : ''}):</span>
             <span className="total-amount">${precioTotal.toLocaleString()} COP</span>
           </div>
           <button className="btn-add-to-order" onClick={handleAgregar}>
-            Confirmar Pedido
+            Agregar al Carrito
           </button>
         </div>
       </div>
