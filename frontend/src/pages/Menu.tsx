@@ -97,7 +97,7 @@ export default function Menu() {
     return true
   }), [platillos, categoriaActiva, alergenosActivos])
 
-  if (loading) {
+  if (loading && !showMesaPicker) {
     return <div className="loading">Cargando menú...</div>
   }
 
@@ -107,6 +107,7 @@ export default function Menu() {
         <div className="modal-overlay">
           <div className="mesa-picker">
             <h2>Selecciona tu mesa</h2>
+            <p className="group-desc">Elige tu mesa para empezar a ordenar</p>
             <div className="mesa-picker-grid">
               {mesas.map(m => (
                 <button
