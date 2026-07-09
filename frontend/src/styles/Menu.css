@@ -162,3 +162,37 @@
   font-size: 1.2rem;
   color: var(--gray);
 }
+
+.mesa-picker {
+  background: var(--white);
+  padding: 40px;
+  border-radius: var(--radius);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+}
+
+.mesa-picker h2 {
+  margin-bottom: 25px;
+  color: var(--dark);
+}
+
+.mesa-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.mesa-picker-btn {
+  padding: 16px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.15s;
+}
+
+.mesa-picker-btn:hover {
+  background: var(--primary);
+  color: var(--white);
+}

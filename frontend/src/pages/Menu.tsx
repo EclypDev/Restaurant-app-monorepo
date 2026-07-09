@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useCartStore from '../store/cartStore'
 import useInventoryStore from '../store/inventoryStore'
-import { IPlatillo, Alergeno } from '@shared'
+import { IPlatillo, IMesa, Alergeno } from '@shared'
 import Cart from '../components/Cart'
 import PlatilloCard from '../components/PlatilloCard'
 import PlatilloModal from '../components/PlatilloModal'
@@ -11,13 +11,15 @@ import AllergenFilter from '../components/AllergenFilter'
 import '../styles/Menu.css'
 
 export default function Menu() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [platillos, setPlatillos] = useState<IPlatillo[]>([])
   const [categorias, setCategorias] = useState<string[]>([])
   const [categoriaActiva, setCategoriaActiva] = useState<string | null>(null)
   const [selectedPlatillo, setSelectedPlatillo] = useState<IPlatillo | null>(null)
   const [loading, setLoading] = useState(true)
   const [alergenosActivos, setAlergenosActivos] = useState<Alergeno[]>([])
+  const [mesas, setMesas] = useState<IMesa[]>([])
+  const [showMesaPicker, setShowMesaPicker] = useState(false)
   
   const setMesaId = useCartStore((state) => state.setMesaId)
   const mesaId = useCartStore((state) => state.mesaId)
@@ -30,6 +32,7 @@ export default function Menu() {
     const mesa = searchParams.get('mesa')
     if (mesa) {
       setMesaId(mesa)
+      setShowMesaPicker(false)
     }
     fetchInventory()
     initSocket()
@@ -40,8 +43,32 @@ export default function Menu() {
   }, [searchParams, setMesaId, fetchInventory, initSocket])
 
   useEffect(() => {
+    if (!mesaId && !searchParams.get('mesa')) {
+      loadMesas()
+    }
     fetchMenu()
   }, [])
+
+  useEffect(() => {
+    if (!mesaId && mesas.length > 0 && !searchParams.get('mesa')) {
+      setShowMesaPicker(true)
+    }
+  }, [mesaId, mesas])
+
+  const loadMesas = async () => {
+    try {
+      const res = await axios.get<IMesa[]>('/api/mesas')
+      setMesas(res.data)
+    } catch {
+      console.error('Error loading mesas')
+    }
+  }
+
+  const selectMesa = (numero: string) => {
+    setMesaId(numero)
+    setSearchParams({ mesa: numero })
+    setShowMesaPicker(false)
+  }
 
   const fetchMenu = async () => {
     try {
@@ -76,6 +103,25 @@ export default function Menu() {
 
   return (
     <div className="menu-container">
+      {showMesaPicker && mesas.length > 0 && (
+        <div className="modal-overlay">
+          <div className="mesa-picker">
+            <h2>Selecciona tu mesa</h2>
+            <div className="mesa-picker-grid">
+              {mesas.map(m => (
+                <button
+                  key={m._id}
+                  className="mesa-picker-btn"
+                  onClick={() => selectMesa(m.numero)}
+                >
+                  {m.numero}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="menu-header">
         <div className="container">
           <h1>🍽️ Nuestro Menú</h1>

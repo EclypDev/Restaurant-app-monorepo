@@ -13,7 +13,7 @@ export class TableService {
     if (existing) throw new AppError('Table number already exists', 400)
 
     const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
-    const qrCode = `${baseUrl}/menu`
+    const qrCode = `${baseUrl}/menu?mesa=${encodeURIComponent(numero)}`
 
     const mesa = await prisma.mesa.create({
       data: { numero, nombre, capacidad, qrCode }
@@ -30,7 +30,7 @@ export class TableService {
       mesas.push({
         numero,
         nombre: numero,
-        qrCode: `${baseUrl}/menu`,
+        qrCode: `${baseUrl}/menu?mesa=${encodeURIComponent(numero)}`,
       })
     }
 
