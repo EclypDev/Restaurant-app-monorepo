@@ -222,3 +222,86 @@
 .btn-agregar:hover {
   background: var(--primary-dark);
 }
+
+.ingredientes-comp-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ing-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  transition: all 0.2s;
+}
+
+.ing-row.quitado {
+  opacity: 0.6;
+}
+
+.ing-emoji {
+  font-size: 1.3rem;
+}
+
+.ing-nombre {
+  flex: 1;
+}
+
+.btn-sin {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: var(--white);
+  color: var(--danger);
+  border: 2px solid var(--danger);
+  transition: all 0.15s;
+}
+
+.btn-sin.activo {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.btn-sin:hover {
+  opacity: 0.8;
+}
+
+.ahorro-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.btn-extra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  border: 2px solid transparent;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.btn-extra.anadido {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.08);
+}
+
+.btn-extra:hover {
+  border-color: var(--primary);
+}
+
+.btn-extra .extra-price {
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 700;
+}

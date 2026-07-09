@@ -106,26 +106,28 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
         {composicion.length > 0 && (
           <div className="opciones-section">
             <h3>Ingredientes incluidos</h3>
-            <p className="group-desc">Toca para quitar (descuento aplicado)</p>
             <div className="ingredientes-comp-grid">
               {composicion.map(comp => {
                 const ing = getIng(comp.ingredienteId)
                 if (!ing) return null
                 const quitado = quitados.has(comp.ingredienteId)
                 return (
-                  <button
+                  <div
                     key={comp.ingredienteId}
-                    className={`ing-comp-btn ${quitado ? 'quitado' : 'incluido'}`}
-                    onClick={() => toggleQuitar(comp.ingredienteId)}
+                    className={`ing-row ${quitado ? 'quitado' : ''}`}
                   >
                     <span className="ing-emoji">{ing.emoji}</span>
                     <span className="ing-nombre">{ing.nombre}</span>
-                    {quitado ? (
-                      <span className="ing-badge ahorro">-${comp.descuento?.toLocaleString() || 0}</span>
-                    ) : (
-                      <span className="ing-badge incluido-badge">Incluido</span>
-                    )}
-                  </button>
+                    <button
+                      className={`btn-sin ${quitado ? 'activo' : ''}`}
+                      onClick={() => toggleQuitar(comp.ingredienteId)}
+                    >
+                      {quitado ? 'SIN ✓' : 'SIN'}
+                    </button>
+                    {quitado && comp.descuento ? (
+                      <span className="ahorro-label">-${comp.descuento.toLocaleString()}</span>
+                    ) : null}
+                  </div>
                 )
               })}
             </div>
@@ -134,8 +136,7 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
 
         {adicionesIds.length > 0 && (
           <div className="opciones-section">
-            <h3>Agregar extras</h3>
-            <p className="group-desc">Selecciona para añadir (+ precio)</p>
+            <h3>Extras</h3>
             <div className="ingredientes-comp-grid">
               {adicionesIds.map(id => {
                 const ing = getIng(id)
@@ -145,16 +146,11 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
                 return (
                   <button
                     key={id}
-                    className={`ing-comp-btn ${anadido ? 'anadido' : ''}`}
+                    className={`btn-extra ${anadido ? 'anadido' : ''}`}
                     onClick={() => toggleAnadir(id)}
                   >
-                    <span className="ing-emoji">{ing.emoji}</span>
-                    <span className="ing-nombre">{ing.nombre}</span>
-                    {anadido ? (
-                      <span className="ing-badge anadido-badge">Añadido</span>
-                    ) : (
-                      <span className="ing-badge extra-price">+${ing.precioAdicional.toLocaleString()}</span>
-                    )}
+                    <span>{ing.emoji} {ing.nombre}</span>
+                    <span className="extra-price">+${ing.precioAdicional.toLocaleString()}</span>
                   </button>
                 )
               })}
@@ -163,7 +159,7 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
         )}
 
         <div className="notas-section">
-          <label>Notas especiales:</label>
+          <label>Observación:</label>
           <textarea
             placeholder="Ej: Sin cebolla, salsa aparte..."
             value={notasEspeciales}
