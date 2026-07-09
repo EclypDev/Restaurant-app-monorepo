@@ -1,4 +1,4 @@
-import { Resena } from '../models/Resena'
+import { prisma } from '../config/prisma'
 import { AppError } from '../middleware/error.middleware'
 
 export class ReviewService {
@@ -9,11 +9,12 @@ export class ReviewService {
     comentario?: string
     categoria?: string
   }, io: any) {
-    const resena = new Resena({
-      ...data,
-      esPublica: data.estrellas >= 4,
+    const resena = await prisma.resena.create({
+      data: {
+        ...data,
+        esPublica: data.estrellas >= 4,
+      }
     })
-    await resena.save()
 
     if (data.estrellas <= 2) {
       try {
@@ -32,34 +33,49 @@ export class ReviewService {
   }
 
   static async getAll(estrellas?: unknown, resuelto?: unknown) {
-    const filter: Record<string, unknown> = {}
-    if (estrellas) filter.estrellas = Number(estrellas)
-    if (resuelto !== undefined) filter.resuelto = resuelto === 'true'
-    return Resena.find(filter).sort({ createdAt: -1 }).limit(100)
+    const where: any = {}
+    if (estrellas) where.estrellas = Number(estrellas)
+    if (resuelto !== undefined) where.resuelto = resuelto === 'true'
+
+    return await prisma.resena.findMany({
+      where,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: 100
+    })
   }
 
   static async resolve(id: string, respuestaAdmin?: string) {
-    const resena = await Resena.findByIdAndUpdate(
-      id,
-      { resuelto: true, respuestaAdmin },
-      { new: true }
-    )
-    if (!resena) throw new AppError('Review not found', 404)
-    return resena
+    try {
+      const resena = await prisma.resena.update({
+        where: { id },
+        data: {
+          resuelto: true,
+          respuestaAdmin
+        }
+      })
+      return resena
+    } catch {
+      throw new AppError('Review not found', 404)
+    }
   }
 
   static async getStats() {
-    const stats = await Resena.aggregate([
-      {
-        $group: {
-          _id: null,
-          total: { $sum: 1 },
-          promedio: { $avg: '$estrellas' },
-          positivas: { $sum: { $cond: [{ $gte: ['$estrellas', 4] }, 1, 0] } },
-          negativas: { $sum: { $cond: [{ $lte: ['$estrellas', 2] }, 1, 0] } },
-        },
-      },
+    const [total, aggregate, positivas, negativas] = await Promise.all([
+      prisma.resena.count(),
+      prisma.resena.aggregate({
+        _avg: { estrellas: true }
+      }),
+      prisma.resena.count({ where: { estrellas: { gte: 4 } } }),
+      prisma.resena.count({ where: { estrellas: { lte: 2 } } })
     ])
-    return stats[0] || { total: 0, promedio: 0, positivas: 0, negativas: 0 }
+
+    return {
+      total,
+      promedio: aggregate._avg.estrellas || 0,
+      positivas,
+      negativas
+    }
   }
 }

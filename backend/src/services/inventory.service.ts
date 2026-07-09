@@ -1,32 +1,38 @@
-import { Ingrediente } from '../models/Ingrediente'
+import { prisma } from '../config/prisma'
 import { AppError } from '../middleware/error.middleware'
 
 export class InventoryService {
   static async getAll(categoria?: unknown, stockDisponible?: unknown) {
-    const filter: Record<string, unknown> = {}
-    if (categoria) filter.categoria = categoria
-    if (stockDisponible !== undefined) filter.stockDisponible = stockDisponible === 'true'
-    return Ingrediente.find(filter).sort({ categoria: 1, nombre: 1 })
+    const where: any = {}
+    if (categoria) where.categoria = categoria as string
+    if (stockDisponible !== undefined) where.stockDisponible = stockDisponible === 'true'
+
+    return await prisma.ingrediente.findMany({
+      where,
+      orderBy: [
+        { categoria: 'asc' },
+        { nombre: 'asc' }
+      ]
+    })
   }
 
   static async getById(id: string) {
-    const item = await Ingrediente.findById(id)
+    const item = await prisma.ingrediente.findUnique({ where: { id } })
     if (!item) throw new AppError('Ingredient not found', 404)
     return item
   }
 
   static async toggleDisponibilidad(id: string, disponible: boolean, io: any) {
-    const ingrediente = await Ingrediente.findByIdAndUpdate(
-      id,
-      { stockDisponible: disponible },
-      { new: true }
-    )
+    const ingrediente = await prisma.ingrediente.update({
+      where: { id },
+      data: { stockDisponible: disponible }
+    })
     if (!ingrediente) throw new AppError('Ingredient not found', 404)
 
     try {
       const evento = ingrediente.stockDisponible ? 'ingrediente-disponible' : 'ingrediente-agotado'
       io.emit(evento, {
-        id: ingrediente._id.toString(),
+        id: ingrediente.id,
         nombre: ingrediente.nombre,
         disponible: ingrediente.stockDisponible,
       })
@@ -38,23 +44,26 @@ export class InventoryService {
   }
 
   static async bulkUpdate(updates: Array<{ id: string; stockDisponible: boolean }>, io: any) {
-    const results: typeof Ingrediente[] = []
+    const results: any[] = []
     for (const update of updates) {
-      const ing = await Ingrediente.findByIdAndUpdate(
-        update.id,
-        { stockDisponible: update.stockDisponible },
-        { new: true }
-      )
-      if (ing) results.push(ing as any)
+      try {
+        const ing = await prisma.ingrediente.update({
+          where: { id: update.id },
+          data: { stockDisponible: update.stockDisponible }
+        })
+        results.push(ing)
+      } catch (err) {
+        // Ignore if item not found
+      }
     }
 
     try {
       results.forEach(ing => {
-        const evento = (ing as any).stockDisponible ? 'ingrediente-disponible' : 'ingrediente-agotado'
+        const evento = ing.stockDisponible ? 'ingrediente-disponible' : 'ingrediente-agotado'
         io.emit(evento, {
-          id: (ing as any)._id.toString(),
-          nombre: (ing as any).nombre,
-          disponible: (ing as any).stockDisponible,
+          id: ing.id,
+          nombre: ing.nombre,
+          disponible: ing.stockDisponible,
         })
       })
     } catch {
@@ -65,8 +74,6 @@ export class InventoryService {
   }
 
   static async create(data: any) {
-    const item = new Ingrediente(data)
-    await item.save()
-    return item
+    return await prisma.ingrediente.create({ data })
   }
 }

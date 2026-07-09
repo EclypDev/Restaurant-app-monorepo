@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
@@ -19,7 +20,7 @@ model Usuario {
 
 model Mesa {
   id            String   @id @default(uuid())
-  numero        String
+  numero        String   @unique
   nombre        String?
   capacidad     Int?
   activa        Boolean  @default(true)
@@ -37,10 +38,12 @@ model Platillo {
   categoria         String
   disponible        Boolean  @default(true)
   personalizable    Boolean  @default(false)
-  opcionesSeleccionables Json? // IOptionGroup[]
-  alergenos         String[]
+  opcionesSeleccionables Json?
+  alergenos         Json?
   tiempoPreparacion Int?
-  capasVisuales     Json? // IVisualLayer[]
+  capasVisuales     Json?
+  composicionPorDefecto Json?
+  adicionesPermitidas Json?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
@@ -50,7 +53,7 @@ model Ingrediente {
   nombre          String
   emoji           String
   precioAdicional Float
-  alergenos       String[]
+  alergenos       Json?
   categoria       String
   stockDisponible Boolean  @default(true)
   createdAt       DateTime @default(now())
@@ -61,21 +64,24 @@ model Orden {
   id            String   @id @default(uuid())
   mesaId        String
   estado        String
-  items         Json     // IOrderItem[]
+  items         Json
   totalPagar    Float
   pagado        Boolean  @default(false)
-  solicitudPago Json?    // ISolicitudPago
+  solicitudPago Json?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
 model Resena {
-  id         String   @id @default(uuid())
-  mesaId     String
-  ordenId    String?
-  estrellas  Int
-  comentario String?
-  resuelto   Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String   @id @default(uuid())
+  mesaId         String
+  ordenId        String?
+  estrellas      Int
+  comentario     String?
+  categoria      String?
+  esPublica      Boolean  @default(false)
+  resuelto       Boolean  @default(false)
+  respuestaAdmin String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

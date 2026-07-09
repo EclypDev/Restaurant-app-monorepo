@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express'
-import { Platillo } from '../models/Platillo'
-import { Orden } from '../models/Orden'
+import { prisma } from '../config/prisma'
 import { asyncHandler } from '../middleware/error.middleware'
 import { IRecomendacion } from '../../../shared/interfaces'
 
@@ -15,50 +14,76 @@ router.post('/', asyncHandler(async (req: Request, res: Response) => {
 
   const cartIds = cartItems.map((item: any) => item.platilloId)
 
-  const platillosEnCarrito = await Platillo.find({
-    _id: { $in: cartIds },
-  }).populate('itemsRelacionados')
+  // Find platillos in cart
+  const platillosEnCarrito = await prisma.platillo.findMany({
+    where: { id: { in: cartIds } }
+  })
 
+  // Recommendations: Related plates
   const relacionadosIds = new Set<string>()
-  platillosEnCarrito.forEach(platillo => {
-    platillo.itemsRelacionados?.forEach((rel: any) => {
-      if (!cartIds.includes(rel._id?.toString())) {
-        relacionadosIds.add(rel._id?.toString())
-      }
-    })
+  platillosEnCarrito.forEach((plat: any) => {
+    // If we have itemsRelacionados stored in options or directly
+    if (plat.itemsRelacionados) {
+      const rels = plat.itemsRelacionados as string[]
+      rels.forEach(r => {
+        if (!cartIds.includes(r)) {
+          relacionadosIds.add(r)
+        }
+      })
+    }
   })
 
   let resultado: IRecomendacion[]
 
   if (relacionadosIds.size === 0) {
-    const masPedidos = await Orden.aggregate([
-      { $unwind: '$items' },
-      { $group: { _id: '$items.platilloId', total: { $sum: '$items.cantidad' } } },
-      { $sort: { total: -1 } },
-      { $limit: 5 },
-    ])
-    const masPedidosIds = masPedidos
-      .map(i => i._id?.toString())
-      .filter((id: string | undefined): id is string => !!id && !cartIds.includes(id))
+    // Let's compute most popular items from last 100 orders in memory
+    const recentOrders = await prisma.orden.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 100
+    })
 
-    const populares = await Platillo.find({
-      ...(masPedidosIds.length > 0
-        ? { _id: { $in: masPedidosIds } }
-        : { _id: { $nin: cartIds }, disponible: true }),
-      disponible: true,
-    }).limit(3)
+    const counts: Record<string, number> = {}
+    recentOrders.forEach((o: any) => {
+      if (Array.isArray(o.items)) {
+        o.items.forEach((item: any) => {
+          if (item.platilloId) {
+            counts[item.platilloId] = (counts[item.platilloId] || 0) + (item.cantidad || 1)
+          }
+        })
+      }
+    })
 
-    resultado = populares.map(p => ({ ...p.toObject(), motivo: 'Más pedido' })) as any;
+    const masPedidosIds = Object.keys(counts)
+      .sort((a, b) => counts[b] - counts[a])
+      .filter(id => !cartIds.includes(id))
+      .slice(0, 5)
+
+    const populares = await prisma.platillo.findMany({
+      where: {
+        id: masPedidosIds.length > 0
+          ? { in: masPedidosIds }
+          : { notIn: cartIds },
+        disponible: true,
+      },
+      take: 3
+    })
+
+    resultado = populares.map(p => ({ ...p, _id: p.id, motivo: 'Más pedido' })) as any
   } else {
-    const recomendaciones = await Platillo.find({
-      _id: { $in: [...relacionadosIds] },
-      disponible: true,
-    }).limit(5)
+    const recomendaciones = await prisma.platillo.findMany({
+      where: {
+        id: { in: [...relacionadosIds] },
+        disponible: true,
+      },
+      take: 5
+    })
 
     resultado = recomendaciones.map(r => ({
-      ...r.toObject(),
+      ...r,
+      _id: r.id,
       motivo: 'Combina con tu pedido',
-    })) as any;  }
+    })) as any
+  }
 
   res.json(resultado)
 }))

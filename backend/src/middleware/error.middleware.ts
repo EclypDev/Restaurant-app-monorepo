@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import mongoose from 'mongoose'
+import { Prisma } from '@prisma/client'
 
 export class AppError extends Error {
   public statusCode: number
@@ -18,7 +18,7 @@ export const notFoundHandler = (_req: Request, res: Response) => {
 }
 
 export const errorHandler = (
-  err: Error | AppError,
+  err: any,
   _req: Request,
   res: Response,
   _next: NextFunction
@@ -33,26 +33,27 @@ export const errorHandler = (
     return
   }
 
-  if (err instanceof mongoose.Error.ValidationError) {
-    res.status(400).json({
-      success: false,
-      message: 'Validation error',
-      details: err.message,
-    })
-    return
-  }
-
-  if (err instanceof mongoose.Error.CastError) {
-    res.status(400).json({
-      success: false,
-      message: 'Invalid ID format',
-    })
-    return
+  // Handle Prisma Client known errors (e.g. unique constraint, record not found)
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2002') {
+      res.status(400).json({
+        success: false,
+        message: `Unique constraint failed on field: ${(err.meta?.target as string[])?.join(', ')}`,
+      })
+      return
+    }
+    if (err.code === 'P2025') {
+      res.status(404).json({
+        success: false,
+        message: 'Record not found',
+      })
+      return
+    }
   }
 
   res.status(500).json({
     success: false,
-    message: 'Internal server error',
+    message: err.message || 'Internal server error',
   })
 }
 

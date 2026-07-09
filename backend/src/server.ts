@@ -6,7 +6,7 @@ import { Server } from 'socket.io'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
-import { connectDatabase } from './config/database'
+// import { connectDatabase } from './config/database'
 import { errorHandler, notFoundHandler } from './middleware/error.middleware'
 import { SeedService } from './services/seed.service'
 
@@ -99,8 +99,8 @@ app.set('io', io)
 process.on('SIGTERM', async () => {
   console.log('🛑 SIGTERM received, shutting down gracefully...')
   server.close(async () => {
-    const { disconnectDatabase } = await import('./config/database')
-    await disconnectDatabase()
+  // const { disconnectDatabase } = await import('./config/database')
+  // await disconnectDatabase()
     process.exit(0)
   })
 })
@@ -117,7 +117,7 @@ process.on('unhandledRejection', (reason) => {
 const PORT = process.env.PORT || 4000
 
 async function start() {
-  await connectDatabase(process.env.MONGODB_URI || 'in-memory')
+  // await connectDatabase(process.env.MONGODB_URI || 'in-memory')
   await SeedService.seedDefaultUsers()
   await SeedService.seedDefaultData()
   
