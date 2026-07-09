@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import io from 'socket.io-client'
 import { useAuth } from '../context/AuthContext'
-import { ISolicitudPagoEvent, ISolicitudMeseroEvent, PaymentMethod } from '../../shared/interfaces'
+import { useSocket } from '../context/SocketContext'
+import { ISolicitudPagoEvent, ISolicitudMeseroEvent, PaymentMethod } from '@shared'
 import '../styles/Mesero.css'
-
-const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000')
 
 interface Solicitud {
   id: number
@@ -21,6 +19,7 @@ interface Solicitud {
 
 export default function Mesero() {
   const { user, loading } = useAuth()
+  const { socket } = useSocket()
   const navigate = useNavigate()
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
 
@@ -29,6 +28,8 @@ export default function Mesero() {
       navigate('/login')
       return
     }
+
+    if (!socket) return
 
     socket.emit('join-meseros')
 
@@ -58,7 +59,7 @@ export default function Mesero() {
       socket.off('solicitud-pago')
       socket.off('solicitud-mesero')
     }
-  }, [user, loading, navigate])
+  }, [user, loading, navigate, socket])
 
   const playNotificationSound = () => {
     try {

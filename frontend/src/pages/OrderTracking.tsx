@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import io from 'socket.io-client'
 import axios from 'axios'
-import { IOrden, OrderStatus, PaymentMethod } from '../../shared/interfaces'
+import { IOrden, OrderStatus, PaymentMethod } from '@shared'
 import ReviewModal from '../components/ReviewModal'
+import { useSocket } from '../context/SocketContext'
+import { useToast } from '../components/Toast'
 import '../styles/OrderTracking.css'
-
-const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000')
 
 export default function OrderTracking() {
   const { orderId } = useParams<{ orderId: string }>()
@@ -15,9 +14,13 @@ export default function OrderTracking() {
   const [showReview, setShowReview] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [tipoPago, setTipoPago] = useState<PaymentMethod>(PaymentMethod.CASH)
+  const { socket } = useSocket()
+  const { toast } = useToast()
 
   useEffect(() => {
     fetchOrder()
+
+    if (!socket) return
 
     socket.on('orden-actualizada', (updated: IOrden) => {
       if (updated._id === orderId) {
@@ -29,7 +32,7 @@ export default function OrderTracking() {
     })
 
     return () => socket.off('orden-actualizada')
-  }, [orderId])
+  }, [orderId, socket])
 
   const fetchOrder = async () => {
     try {
@@ -52,9 +55,9 @@ export default function OrderTracking() {
         tipoPago,
       })
       setShowPaymentModal(false)
-      alert('✅ Solicitud enviada. Un mesero se acercará pronto.')
+      toast('Solicitud enviada. Un mesero se acercará pronto.', 'success')
     } catch {
-      alert('Error al solicitar la cuenta')
+      toast('Error al solicitar la cuenta', 'error')
     }
   }
 
@@ -64,7 +67,7 @@ export default function OrderTracking() {
         mesaId: orden?.mesaId,
         motivo: 'Atención general',
       })
-      alert('✅ Mesero notificado')
+      toast('Mesero notificado', 'success')
     } catch {
       console.error('Error calling waiter')
     }

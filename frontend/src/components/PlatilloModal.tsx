@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import useCartStore from '../store/cartStore'
 import useInventoryStore from '../store/inventoryStore'
-import { IPlatillo } from '../../shared/interfaces'
+import { IPlatillo } from '@shared'
 import '../styles/PlatilloModal.css'
 
 interface PlatilloModalProps {
@@ -36,11 +36,21 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
   const capasActivas = useMemo(() => {
     if (!platillo.capasVisuales) return []
     
+    const seleccionados = Object.values(selecciones).flat()
+    const idsSeleccionados = new Set<string>()
+    if (platillo.opcionesSeleccionables) {
+      platillo.opcionesSeleccionables.forEach(grupo => {
+        grupo.items.forEach(item => {
+          if (seleccionados.includes(item.nombre) && item.ingredienteId) {
+            idsSeleccionados.add(item.ingredienteId)
+          }
+        })
+      })
+    }
     return platillo.capasVisuales.filter(capa => {
-      const seleccionados = Object.values(selecciones).flat()
-      return seleccionados.includes(capa.ingredienteId)
+      return idsSeleccionados.has(capa.ingredienteId)
     }).sort((a, b) => a.posicion.z - b.posicion.z)
-  }, [platillo.capasVisuales, selecciones])
+  }, [platillo.capasVisuales, selecciones, platillo.opcionesSeleccionables])
 
   const handleSeleccion = (grupo: string, itemNombre: string) => {
     setSelecciones(prev => {

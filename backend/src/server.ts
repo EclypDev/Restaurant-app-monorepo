@@ -1,12 +1,17 @@
+import './config/env'
 import express, { Application, Request, Response } from 'express'
+console.log("¡DEBUG: EL SERVIDOR ESTA ARRANCANDO!")
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
+import morgan from 'morgan'
 import dotenv from 'dotenv'
 import { connectDatabase } from './config/database'
-import { errorHandler } from './middleware/error.middleware'
+import { errorHandler, notFoundHandler } from './middleware/error.middleware'
+import { SeedService } from './services/seed.service'
 
 import menuRoutes from './routes/menu.routes'
+import platillosRoutes from './routes/platillos.routes'
 import orderRoutes from './routes/order.routes'
 import authRoutes from './routes/auth.routes'
 import tableRoutes from './routes/table.routes'
@@ -25,6 +30,7 @@ app.use(cors({
   credentials: true,
 }))
 app.use(express.json())
+app.use(morgan('dev'))
 
 // Health check endpoint (always available, even without DB)
 app.get('/health', (_req: Request, res: Response) => {
@@ -36,7 +42,9 @@ app.get('/health', (_req: Request, res: Response) => {
 })
 
 // Routes
+app.get('/test', (req, res) => res.json({ message: 'working' }))
 app.use('/api/menu', menuRoutes)
+app.use('/api/platillos', platillosRoutes)
 app.use('/api/pedidos', orderRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/mesas', tableRoutes)
@@ -45,7 +53,10 @@ app.use('/api/recomendaciones', recommendationsRoutes)
 app.use('/api/resenas', reviewRoutes)
 app.use('/api/pago', paymentRoutes)
 
-// Error handler (must be last)
+// 404 handler (must be after all routes)
+app.use(notFoundHandler)
+
+// Error handler
 app.use(errorHandler)
 
 const server = http.createServer(app)
@@ -107,6 +118,8 @@ const PORT = process.env.PORT || 4000
 
 async function start() {
   await connectDatabase(process.env.MONGODB_URI || 'in-memory')
+  await SeedService.seedDefaultUsers()
+  await SeedService.seedDefaultData()
   
   server.listen(PORT, () => {
     console.log(`🚀 Backend running on port ${PORT}`)
@@ -118,3 +131,5 @@ start().catch((error) => {
   console.error('Failed to start server:', error)
   process.exit(1)
 })
+
+// Trigger nodemon restart

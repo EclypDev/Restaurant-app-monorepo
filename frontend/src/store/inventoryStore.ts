@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { io, Socket } from 'socket.io-client'
-import { IIngredienteUpdateEvent } from '../../shared/interfaces'
+import { IIngredienteUpdateEvent, IIngrediente } from '@shared/interfaces'
 
 interface InventoryState {
-  ingredientes: Array<{ _id: string; nombre: string; disponible: boolean; stock: number }>
+  ingredientes: IIngrediente[]
   agotados: Set<string>
   loading: boolean
   socket: Socket | null
@@ -25,7 +25,7 @@ const useInventoryStore = create<InventoryState>((set) => ({
       const response = await fetch('/api/inventario')
       const data = await response.json()
       const agotados = new Set(
-        data.filter((i: any) => !i.disponible).map((i: any) => i._id)
+        data.filter((i: any) => !i.stockDisponible).map((i: any) => i._id)
       )
       set({ ingredientes: data, agotados, loading: false })
     } catch (error) {

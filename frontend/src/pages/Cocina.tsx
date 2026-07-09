@@ -1,15 +1,14 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import io from 'socket.io-client'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
-import { IOrden, OrderStatus } from '../../shared/interfaces'
+import { useSocket } from '../context/SocketContext'
+import { IOrden, OrderStatus } from '@shared'
 import '../styles/Cocina.css'
-
-const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000')
 
 export default function Cocina() {
   const { user, loading } = useAuth()
+  const { socket } = useSocket()
   const navigate = useNavigate()
   const [pedidos, setPedidos] = useState<IOrden[]>([])
   const [now, setNow] = useState(Date.now())
@@ -19,6 +18,8 @@ export default function Cocina() {
       navigate('/login')
       return
     }
+
+    if (!socket) return
 
     socket.emit('join-kitchen')
 
@@ -38,7 +39,7 @@ export default function Cocina() {
       socket.off('nueva-orden-cocina')
       socket.off('orden-actualizada')
     }
-  }, [user, loading, navigate])
+  }, [user, loading, navigate, socket])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -143,7 +144,37 @@ function PedidoCard({ pedido, now, onAction, actionLabel, actionClass }: {
         {pedido.items.map((item, idx) => (
           <li key={idx}>
             <strong>{item.cantidad}x {item.nombre}</strong>
-            {item.eleccionUsuario && item.eleccionUsuario.length > 0 && (
+            
+            {item.estructuraPlatoFinal && (
+              <div className="kitchen-instructions">
+                {item.estructuraPlatoFinal.instruccionesCocina.QUITAR.length > 0 && (
+                  <div className="instruction-block instruction-remove">
+                    <strong>🛑 SIN:</strong>
+                    {item.estructuraPlatoFinal.instruccionesCocina.QUITAR.map((q, i) => (
+                      <span key={i} className="instruction-item">{q.nombre}</span>
+                    ))}
+                  </div>
+                )}
+                {item.estructuraPlatoFinal.instruccionesCocina.ANADIR_O_EXTRA.length > 0 && (
+                  <div className="instruction-block instruction-add">
+                    <strong>🟢 EXTRA:</strong>
+                    {item.estructuraPlatoFinal.instruccionesCocina.ANADIR_O_EXTRA.map((a, i) => (
+                      <span key={i} className="instruction-item">{a.nombre}</span>
+                    ))}
+                  </div>
+                )}
+                {item.estructuraPlatoFinal.instruccionesCocina.MANTENER_BASE.length > 0 && (
+                  <div className="instruction-block instruction-keep">
+                    <strong>✅ MANTENER:</strong>
+                    {item.estructuraPlatoFinal.instruccionesCocina.MANTENER_BASE.map((m, i) => (
+                      <span key={i} className="instruction-item">{m.nombre}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {!item.estructuraPlatoFinal && item.eleccionUsuario && item.eleccionUsuario.length > 0 && (
               <div className="elecciones">
                 {item.eleccionUsuario.map((el, i) => (
                   <span key={i} className="eleccion-tag">
@@ -152,8 +183,9 @@ function PedidoCard({ pedido, now, onAction, actionLabel, actionClass }: {
                 ))}
               </div>
             )}
+            
             {item.notasEspeciales && (
-              <div className="notas">⚠️ {item.notasEspeciales}</div>
+              <div className="notas">️ {item.notasEspeciales}</div>
             )}
           </li>
         ))}

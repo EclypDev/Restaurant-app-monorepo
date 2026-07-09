@@ -48,3 +48,10 @@ export const ALERGENOS = [
 ] as const
 
 export type Alergeno = typeof ALERGENOS[number]
+
+export type IngredienteCategoria =
+  | 'base'
+  | 'proteina'
+  | 'adicion_gratuita'
+  | 'adicion_premium'
+  | 'extra'

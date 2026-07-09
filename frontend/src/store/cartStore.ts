@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { IOrderItem } from '../../shared/interfaces'
+import { IOrderItem } from '@shared/interfaces'
 
 interface CartState {
   items: IOrderItem[]

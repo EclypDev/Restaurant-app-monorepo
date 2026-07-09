@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
-import { IPlatillo, IMesa, IOrden, IIngrediente, IResena } from '../../shared/interfaces'
+import { IPlatillo, IPlatilloPredefinido, IMesa, IOrden, IIngrediente, IResena } from '@shared'
 import QRGenerator from '../components/QRGenerator'
 import '../styles/Admin.css'
 
 export default function Admin() {
   const { user, logout, loading } = useAuth()
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<'menu' | 'mesas' | 'inventario' | 'ordenes' | 'resenas'>('menu')
+  const [activeTab, setActiveTab] = useState<'menu' | 'platos_base' | 'mesas' | 'inventario' | 'ordenes' | 'resenas'>('menu')
   const [platillos, setPlatillos] = useState<IPlatillo[]>([])
+  const [platillosBase, setPlatillosBase] = useState<IPlatilloPredefinido[]>([])
   const [mesas, setMesas] = useState<IMesa[]>([])
   const [ordenes, setOrdenes] = useState<IOrden[]>([])
   const [ingredientes, setIngredientes] = useState<IIngrediente[]>([])
@@ -33,16 +34,18 @@ export default function Admin() {
 
   const fetchData = async () => {
     try {
-      const [platillosRes, mesasRes, ordenesRes, ingredientesRes, resenasRes] = await Promise.all([
+      const [platillosRes, platillosBaseRes, mesasRes, ordenesRes, ingredientesRes, resenasRes] = await Promise.all([
         axios.get<IPlatillo[]>('/api/menu'),
+        axios.get<IPlatilloPredefinido[]>('/api/platillos'),
         axios.get<IMesa[]>('/api/mesas'),
-        axios.get<IOrden[]>('/api/pedidos'),
+        axios.get<{ ordenes: IOrden[] }>('/api/pedidos?limit=100'),
         axios.get<IIngrediente[]>('/api/inventario'),
         axios.get<IResena[]>('/api/resenas'),
       ])
       setPlatillos(platillosRes.data)
+      setPlatillosBase(platillosBaseRes.data)
       setMesas(mesasRes.data)
-      setOrdenes(ordenesRes.data)
+      setOrdenes(ordenesRes.data.ordenes)
       setIngredientes(ingredientesRes.data)
       setResenas(resenasRes.data)
     } catch {
@@ -72,6 +75,9 @@ export default function Admin() {
         <button className={activeTab === 'menu' ? 'active' : ''} onClick={() => setActiveTab('menu')}>
           🍽️ Menú
         </button>
+        <button className={activeTab === 'platos_base' ? 'active' : ''} onClick={() => setActiveTab('platos_base')}>
+          🧱 Platos Base
+        </button>
         <button className={activeTab === 'mesas' ? 'active' : ''} onClick={() => setActiveTab('mesas')}>
           🪑 Mesas
         </button>
@@ -94,6 +100,10 @@ export default function Admin() {
             onEdit={(p) => { setEditingPlatillo(p); setShowPlatilloForm(true) }}
             onAdd={() => { setEditingPlatillo(null); setShowPlatilloForm(true) }}
           />
+        )}
+
+        {activeTab === 'platos_base' && (
+          <PlatosBaseTab platillosBase={platillosBase} onRefresh={fetchData} />
         )}
 
         {activeTab === 'mesas' && (
@@ -257,24 +267,22 @@ function InventarioTab({ ingredientes, onRefresh }: {
           <tr>
             <th>Nombre</th>
             <th>Categoría</th>
-            <th>Stock</th>
             <th>Disponible</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {ingredientes.map(ing => (
-            <tr key={ing._id} className={!ing.disponible ? 'row-agotado' : ''}>
-              <td>{ing.nombre}</td>
+            <tr key={ing._id} className={!ing.stockDisponible ? 'row-agotado' : ''}>
+              <td>{ing.emoji} {ing.nombre}</td>
               <td>{ing.categoria || '-'}</td>
-              <td>{ing.stock} {ing.unidad}</td>
-              <td>{ing.disponible ? '✅' : '❌ Agotado'}</td>
+              <td>{ing.stockDisponible ? '✅' : '❌ Agotado'}</td>
               <td>
                 <button
-                  onClick={() => toggleDisponibilidad(ing._id, ing.disponible)}
+                  onClick={() => toggleDisponibilidad(ing._id, ing.stockDisponible)}
                   className="btn-small"
                 >
-                  {ing.disponible ? 'Marcar Agotado' : 'Marcar Disponible'}
+                  {ing.stockDisponible ? 'Marcar Agotado' : 'Marcar Disponible'}
                 </button>
               </td>
             </tr>
@@ -359,6 +367,56 @@ function ResenasTab({ resenas, onRefresh }: {
                   </button>
                 )}
                 {r.resuelto && <span className="resuelto-badge">✅ Resuelto</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function PlatosBaseTab({ platillosBase, onRefresh }: {
+  platillosBase: IPlatilloPredefinido[]
+  onRefresh: () => void
+}) {
+  const handleDelete = async (id: string) => {
+    if (!confirm('¿Eliminar este plato base?')) return
+    try {
+      await axios.delete(`/api/platillos/${id}`)
+      onRefresh()
+    } catch {
+      console.error('Error deleting plato base')
+    }
+  }
+
+  return (
+    <div className="tab-content">
+      <div className="tab-header">
+        <h3>Platos Base para Creator</h3>
+      </div>
+
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio Base</th>
+            <th>Ingredientes</th>
+            <th>Disponible</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {platillosBase.map(p => (
+            <tr key={p._id}>
+              <td>{p.nombre}</td>
+              <td>{p.categoria}</td>
+              <td>${p.precioBase.toLocaleString()}</td>
+              <td>{p.composicionPorDefecto.length} items</td>
+              <td>{p.disponible ? '✅' : '❌'}</td>
+              <td>
+                <button onClick={() => handleDelete(p._id)} className="btn-small btn-danger">Eliminar</button>
               </td>
             </tr>
           ))}

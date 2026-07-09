@@ -1,4 +1,4 @@
-import { IPlatillo } from '../../shared/interfaces'
+import { IPlatillo } from '@shared'
 import '../styles/PlatilloCard.css'
 
 interface PlatilloCardProps {

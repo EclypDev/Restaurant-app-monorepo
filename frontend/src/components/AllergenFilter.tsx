@@ -1,4 +1,4 @@
-import { ALERGENOS, Alergeno } from '../../shared/enums'
+import { ALERGENOS, Alergeno } from '@shared'
 import '../styles/AllergenFilter.css'
 
 const ALERGENO_ICONS: Record<Alergeno, string> = {

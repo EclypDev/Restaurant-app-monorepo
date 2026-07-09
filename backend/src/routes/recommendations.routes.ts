@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express'
 import { Platillo } from '../models/Platillo'
+import { Orden } from '../models/Orden'
 import { asyncHandler } from '../middleware/error.middleware'
 import { IRecomendacion } from '../../../shared/interfaces'
 
@@ -30,14 +31,24 @@ router.post('/', asyncHandler(async (req: Request, res: Response) => {
   let resultado: IRecomendacion[]
 
   if (relacionadosIds.size === 0) {
-    const populares = await Platillo.find({
-      _id: { $nin: cartIds },
-      disponible: true,
-    })
-    .sort({ createdAt: -1 })
-    .limit(3)
+    const masPedidos = await Orden.aggregate([
+      { $unwind: '$items' },
+      { $group: { _id: '$items.platilloId', total: { $sum: '$items.cantidad' } } },
+      { $sort: { total: -1 } },
+      { $limit: 5 },
+    ])
+    const masPedidosIds = masPedidos
+      .map(i => i._id?.toString())
+      .filter((id: string | undefined): id is string => !!id && !cartIds.includes(id))
 
-    resultado = populares.map(p => ({ ...p.toObject(), motivo: 'Popular' }))
+    const populares = await Platillo.find({
+      ...(masPedidosIds.length > 0
+        ? { _id: { $in: masPedidosIds } }
+        : { _id: { $nin: cartIds }, disponible: true }),
+      disponible: true,
+    }).limit(3)
+
+    resultado = populares.map(p => ({ ...p.toObject(), motivo: 'Más pedido' })) as any;
   } else {
     const recomendaciones = await Platillo.find({
       _id: { $in: [...relacionadosIds] },
@@ -47,8 +58,7 @@ router.post('/', asyncHandler(async (req: Request, res: Response) => {
     resultado = recomendaciones.map(r => ({
       ...r.toObject(),
       motivo: 'Combina con tu pedido',
-    }))
-  }
+    })) as any;  }
 
   res.json(resultado)
 }))

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import useCartStore from '../store/cartStore'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { IRecomendacion } from '../../shared/interfaces'
+import { IRecomendacion } from '@shared'
+import { useToast } from './Toast'
 import '../styles/Cart.css'
 
 export default function Cart() {
@@ -15,6 +16,7 @@ export default function Cart() {
   const clearCart = useCartStore((state) => state.clearCart)
   const addItem = useCartStore((state) => state.addItem)
   const navigate = useNavigate()
+  const { toast } = useToast()
 
   const [isOpen, setIsOpen] = useState(false)
   const [recomendaciones, setRecomendaciones] = useState<IRecomendacion[]>([])
@@ -50,7 +52,7 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     if (!mesaId) {
-      alert('Error: No se detectó el número de mesa. Escanee el QR nuevamente.')
+      toast('No se detectó el número de mesa. Escanee el QR nuevamente.', 'error')
       return
     }
 
@@ -64,7 +66,7 @@ export default function Cart() {
       clearCart()
       navigate(`/order/${data.orden._id}`)
     } catch {
-      alert('Error al crear el pedido')
+      toast('Error al crear el pedido', 'error')
     }
   }
 

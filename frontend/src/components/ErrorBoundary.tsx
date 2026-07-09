@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
-import { IErrorBoundaryProps } from '../../shared/interfaces'
+import { IErrorBoundaryProps } from '@shared'
 
 interface ErrorBoundaryState {
   hasError: boolean

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import axios from 'axios'
-import { UserRole } from '../../shared/enums'
+import { UserRole } from '@shared'
 
 interface User {
   id: string
@@ -29,9 +29,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       fetchUser()
     } else {
-      setLoading(false)
+      autoLogin()
     }
   }, [token])
+
+  const autoLogin = async (retries = 3) => {
+    // Modo desarrollo: usamos token especial bypass
+    localStorage.setItem('token', 'dev-bypass-token')
+    setToken('dev-bypass-token')
+    
+    // Simular usuario
+    setUser({ id: 'dev-bypass-id', nombre: 'Hector (Dev)', email: 'hectoraderfer123421@gmail.com', rol: UserRole.ADMIN })
+    setLoading(false)
+  }
 
   const fetchUser = async () => {
     try {

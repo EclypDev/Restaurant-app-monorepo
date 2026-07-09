@@ -5,7 +5,71 @@ import type {
   ReviewCategory,
   TimeUnit,
   Alergeno,
+  IngredienteCategoria,
 } from './enums'
+
+export type { Alergeno } from './enums'
+export type { IngredienteCategoria } from './enums'
+
+export interface IIngrediente {
+  _id: string
+  nombre: string
+  emoji: string
+  precioAdicional: number
+  alergenos: Alergeno[]
+  categoria: IngredienteCategoria
+  stockDisponible: boolean
+  capaImagenUrl?: string
+  restauranteId?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IComposicionDefault {
+  ingredienteId: string
+  removible: boolean
+  esBase?: boolean
+  esProteina?: boolean
+}
+
+export interface IPlatilloPredefinido {
+  _id: string
+  nombre: string
+  descripcion?: string
+  precioBase: number
+  imagenPredefinidaUrl?: string
+  categoria: string
+  composicionPorDefecto: IComposicionDefault[]
+  adicionesPermitidas: string[]
+  disponible: boolean
+  tiempoPreparacion?: number
+  restauranteId?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IInstruccionesCocina {
+  QUITAR: Array<{ ingredienteId: string; nombre: string }>
+  ANADIR_O_EXTRA: Array<{ ingredienteId: string; nombre: string; precioCobrado: number }>
+  MANTENER_BASE: Array<{ ingredienteId: string; nombre: string }>
+}
+
+export interface IEstructuraPlatoFinal {
+  platilloOriginalId: string
+  nombreMenu: string
+  precioFinalCobrado: number
+  instruccionesCocina: IInstruccionesCocina
+}
+
+export interface IOrderItemExtended {
+  platilloId: string
+  nombre: string
+  cantidad: number
+  precioUnitario: number
+  eleccionUsuario?: Array<{ grupo: string; seleccionado: string[] }>
+  notasEspeciales?: string
+  estructuraPlatoFinal?: IEstructuraPlatoFinal
+}
 
 export interface IOptionItem {
   nombre: string
@@ -61,6 +125,7 @@ export interface IOrderItem {
   precioUnitario: number
   eleccionUsuario?: IEleccionUsuario[]
   notasEspeciales?: string
+  estructuraPlatoFinal?: IEstructuraPlatoFinal
 }
 
 export interface ISolicitudPago {
@@ -77,16 +142,16 @@ export interface IOrden {
   items: IOrderItem[]
   totalPagar: number
   restauranteId?: string
-  entregadoAt?: string
+  entregadoAt?: string | Date
   solicitudPago?: ISolicitudPago
   metodoPago?: PaymentMethod
   pagado: boolean
-  pagadoAt?: string
-  createdAt: string
-  updatedAt: string
+  pagadoAt?: string | Date
+  createdAt: string | Date
+  updatedAt: string | Date
 }
 
-export interface IIngrediente {
+export interface IIngredienteOld {
   _id: string
   nombre: string
   categoria?: string

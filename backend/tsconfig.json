@@ -15,9 +15,10 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+      "paths": {
+        "@/*": ["src/*"],
+        "@shared/*": ["../shared/*"]
+      }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

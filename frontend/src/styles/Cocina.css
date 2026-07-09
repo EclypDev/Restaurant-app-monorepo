@@ -134,6 +134,49 @@
   font-size: 0.9rem;
 }
 
+.kitchen-instructions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.instruction-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.instruction-block strong {
+  white-space: nowrap;
+}
+
+.instruction-remove {
+  background: rgba(244, 67, 54, 0.15);
+  color: #ff6b6b;
+}
+
+.instruction-add {
+  background: rgba(76, 175, 80, 0.15);
+  color: #69f0ae;
+}
+
+.instruction-keep {
+  background: rgba(255, 255, 255, 0.05);
+  color: #aaa;
+}
+
+.instruction-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
 .btn-action {
   width: 100%;
   padding: 12px;

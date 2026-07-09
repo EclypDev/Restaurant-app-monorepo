@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { ReviewCategory } from '../../shared/enums'
+import { ReviewCategory } from '@shared'
 import '../styles/ReviewModal.css'
 
 interface ReviewModalProps {

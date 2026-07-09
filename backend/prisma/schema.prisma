@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       String
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Mesa {
+  id            String   @id @default(uuid())
+  numero        String
+  nombre        String?
+  capacidad     Int?
+  activa        Boolean  @default(true)
+  qrCode        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Platillo {
+  id                String   @id @default(uuid())
+  nombre            String
+  descripcion       String?
+  precioBase        Float
+  imagenUrl         String?
+  categoria         String
+  disponible        Boolean  @default(true)
+  personalizable    Boolean  @default(false)
+  opcionesSeleccionables Json? // IOptionGroup[]
+  alergenos         String[]
+  tiempoPreparacion Int?
+  capasVisuales     Json? // IVisualLayer[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Ingrediente {
+  id              String   @id @default(uuid())
+  nombre          String
+  emoji           String
+  precioAdicional Float
+  alergenos       String[]
+  categoria       String
+  stockDisponible Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Orden {
+  id            String   @id @default(uuid())
+  mesaId        String
+  estado        String
+  items         Json     // IOrderItem[]
+  totalPagar    Float
+  pagado        Boolean  @default(false)
+  solicitudPago Json?    // ISolicitudPago
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Resena {
+  id         String   @id @default(uuid())
+  mesaId     String
+  ordenId    String?
+  estrellas  Int
+  comentario String?
+  resuelto   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
