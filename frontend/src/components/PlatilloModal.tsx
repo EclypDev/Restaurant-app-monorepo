@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import useCartStore from '../store/cartStore'
 import useInventoryStore from '../store/inventoryStore'
-import { IPlatillo } from '@shared'
+import axios from 'axios'
+import { IPlatillo, IIngrediente } from '@shared'
 import '../styles/PlatilloModal.css'
 
 interface PlatilloModalProps {
@@ -12,85 +13,84 @@ interface PlatilloModalProps {
 export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps) {
   const [cantidad, setCantidad] = useState(1)
   const [notasEspeciales, setNotasEspeciales] = useState('')
-  const [selecciones, setSelecciones] = useState<Record<string, string[]>>({})
+  const [quitados, setQuitados] = useState<Set<string>>(new Set())
+  const [anadidos, setAnadidos] = useState<Set<string>>(new Set())
+  const [todosIngredientes, setTodosIngredientes] = useState<IIngrediente[]>([])
 
   const addItem = useCartStore((state) => state.addItem)
   const ingredientesAgotados = useInventoryStore((state) => state.agotados)
 
+  useEffect(() => {
+    axios.get<IIngrediente[]>('/api/inventario').then(res => {
+      setTodosIngredientes(res.data)
+    }).catch(() => {})
+  }, [])
+
+  const ingredienteMap = useMemo(() => {
+    const map = new Map<string, IIngrediente>()
+    todosIngredientes.forEach(i => map.set(i.id, i))
+    return map
+  }, [todosIngredientes])
+
+  const getIng = (id: string) => ingredienteMap.get(id)
+
+  const composicion = platillo.composicionPorDefecto || []
+  const adicionesIds = platillo.adicionesPermitidas || []
+
+  const ingredientesDisponibles = useMemo(() =>
+    adicionesIds
+      .map(id => getIng(id))
+      .filter((i): i is IIngrediente => i !== undefined && !ingredientesAgotados.has(i.id))
+      .filter(i => !anadidos.has(i.id)),
+  [adicionesIds, getIng, ingredientesAgotados, anadidos])
+
   const precioTotal = useMemo(() => {
     let total = platillo.precioBase
 
-    if (platillo.personalizable && platillo.opcionesSeleccionables) {
-      platillo.opcionesSeleccionables.forEach(grupo => {
-        const seleccionados = selecciones[grupo.grupo] || []
-        seleccionados.forEach(itemNombre => {
-          const item = grupo.items.find(i => i.nombre === itemNombre)
-          if (item) total += item.precioExtra
-        })
-      })
-    }
-
-    return total * cantidad
-  }, [platillo, selecciones, cantidad])
-
-  const capasActivas = useMemo(() => {
-    if (!platillo.capasVisuales) return []
-    
-    const nombresSeleccionados = new Set(Object.values(selecciones).flat())
-    const idsSeleccionados = new Set<string>()
-    if (platillo.opcionesSeleccionables) {
-      platillo.opcionesSeleccionables.forEach(grupo => {
-        grupo.items.forEach(item => {
-          if (nombresSeleccionados.has(item.nombre) && item.ingredienteId) {
-            idsSeleccionados.add(item.ingredienteId)
-          }
-        })
-      })
-    }
-    return platillo.capasVisuales.filter(capa => {
-      return idsSeleccionados.has(capa.ingredienteId)
-    }).sort((a, b) => a.posicion.z - b.posicion.z)
-  }, [platillo.capasVisuales, selecciones, platillo.opcionesSeleccionables])
-
-  const handleSeleccion = (grupo: string, itemNombre: string) => {
-    setSelecciones(prev => {
-      const current = prev[grupo] || []
-      const maxSeleccion = platillo.opcionesSeleccionables?.find(g => g.grupo === grupo)?.maxSeleccion || 1
-
-      if (current.includes(itemNombre)) {
-        return { ...prev, [grupo]: current.filter(n => n !== itemNombre) }
+    composicion.forEach(comp => {
+      if (quitados.has(comp.ingredienteId) && comp.descuento) {
+        total -= comp.descuento
       }
+    })
 
-      if (current.length >= maxSeleccion) {
-        return prev
-      }
+    anadidos.forEach(id => {
+      const ing = getIng(id)
+      if (ing) total += ing.precioAdicional
+    })
 
-      return { ...prev, [grupo]: [...current, itemNombre] }
+    return Math.max(0, total) * cantidad
+  }, [platillo.precioBase, composicion, quitados, anadidos, getIng, cantidad])
+
+  const toggleQuitar = (ingredienteId: string) => {
+    setQuitados(prev => {
+      const next = new Set(prev)
+      if (next.has(ingredienteId)) next.delete(ingredienteId)
+      else next.add(ingredienteId)
+      return next
     })
   }
 
-  const esIngredienteAgotado = (item: { ingredienteId?: string }) => {
-    if (!item.ingredienteId) return false
-    return ingredientesAgotados.has(item.ingredienteId)
+  const toggleAnadir = (ingredienteId: string) => {
+    setAnadidos(prev => {
+      const next = new Set(prev)
+      if (next.has(ingredienteId)) next.delete(ingredienteId)
+      else next.add(ingredienteId)
+      return next
+    })
   }
 
   const handleAgregar = () => {
-    const eleccionUsuario = platillo.opcionesSeleccionables
-      ? platillo.opcionesSeleccionables.map(grupo => ({
-          grupo: grupo.grupo,
-          seleccionado: selecciones[grupo.grupo] || [],
-        }))
-      : []
-
     addItem({
       platilloId: platillo._id,
       nombre: platillo.nombre,
       cantidad,
       precioUnitario: precioTotal / cantidad,
-      eleccionUsuario,
+      eleccionUsuario: [
+        { grupo: 'QUITAR', seleccionado: Array.from(quitados).map(id => getIng(id)?.nombre || id) },
+        { grupo: 'AÑADIR', seleccionado: Array.from(anadidos).map(id => getIng(id)?.nombre || id) },
+      ],
       notasEspeciales,
     })
-
     onClose()
   }
 
@@ -99,66 +99,66 @@ export default function PlatilloModal({ platillo, onClose }: PlatilloModalProps)
       <div className="platillo-modal" onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        <div className="dish-visual">
-          {platillo.imagenBase && (
-            <img src={platillo.imagenBase} alt={platillo.nombre} className="dish-base" />
-          )}
-          {capasActivas.map((capa, idx) => (
-            <img
-              key={idx}
-              src={capa.imagenUrl}
-              alt=""
-              className="dish-layer"
-              style={{
-                left: `${capa.posicion.x}%`,
-                top: `${capa.posicion.y}%`,
-                transform: `scale(${capa.escala || 1})`,
-                zIndex: capa.posicion.z,
-              }}
-            />
-          ))}
-          {!platillo.imagenBase && platillo.imagenUrl && (
-            <img src={platillo.imagenUrl} alt={platillo.nombre} className="dish-base" />
-          )}
-        </div>
-
         <h2>{platillo.nombre}</h2>
         <p className="modal-desc">{platillo.descripcion}</p>
         <p className="modal-base-price">Precio base: ${platillo.precioBase.toLocaleString()}</p>
 
-        {platillo.personalizable && platillo.opcionesSeleccionables && (
+        {composicion.length > 0 && (
           <div className="opciones-section">
-            <h3>Personaliza tu plato</h3>
-            {platillo.opcionesSeleccionables.map(grupo => (
-              <div key={grupo.grupo} className="opcion-grupo">
-                <h4>
-                  {grupo.grupo}
-                  <span className="max-seleccion">
-                    (máx {grupo.maxSeleccion})
-                  </span>
-                </h4>
-                <div className="opcion-items">
-                  {grupo.items.map(item => {
-                    const isSelected = (selecciones[grupo.grupo] || []).includes(item.nombre)
-                    const agotado = esIngredienteAgotado(item)
-                    return (
-                      <button
-                        key={item.nombre}
-                        className={`opcion-item ${isSelected ? 'selected' : ''} ${agotado ? 'agotado' : ''}`}
-                        onClick={() => !agotado && handleSeleccion(grupo.grupo, item.nombre)}
-                        disabled={agotado}
-                      >
-                        <span>{item.nombre}</span>
-                        {agotado && <span className="agotado-badge">Agotado</span>}
-                        {!agotado && item.precioExtra > 0 && (
-                          <span className="extra-price">+${item.precioExtra.toLocaleString()}</span>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            ))}
+            <h3>Ingredientes incluidos</h3>
+            <p className="group-desc">Toca para quitar (descuento aplicado)</p>
+            <div className="ingredientes-comp-grid">
+              {composicion.map(comp => {
+                const ing = getIng(comp.ingredienteId)
+                if (!ing) return null
+                const quitado = quitados.has(comp.ingredienteId)
+                return (
+                  <button
+                    key={comp.ingredienteId}
+                    className={`ing-comp-btn ${quitado ? 'quitado' : 'incluido'}`}
+                    onClick={() => toggleQuitar(comp.ingredienteId)}
+                  >
+                    <span className="ing-emoji">{ing.emoji}</span>
+                    <span className="ing-nombre">{ing.nombre}</span>
+                    {quitado ? (
+                      <span className="ing-badge ahorro">-${comp.descuento?.toLocaleString() || 0}</span>
+                    ) : (
+                      <span className="ing-badge incluido-badge">Incluido</span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {adicionesIds.length > 0 && (
+          <div className="opciones-section">
+            <h3>Agregar extras</h3>
+            <p className="group-desc">Selecciona para añadir (+ precio)</p>
+            <div className="ingredientes-comp-grid">
+              {adicionesIds.map(id => {
+                const ing = getIng(id)
+                if (!ing) return null
+                if (ingredientesAgotados.has(ing.id)) return null
+                const anadido = anadidos.has(id)
+                return (
+                  <button
+                    key={id}
+                    className={`ing-comp-btn ${anadido ? 'anadido' : ''}`}
+                    onClick={() => toggleAnadir(id)}
+                  >
+                    <span className="ing-emoji">{ing.emoji}</span>
+                    <span className="ing-nombre">{ing.nombre}</span>
+                    {anadido ? (
+                      <span className="ing-badge anadido-badge">Añadido</span>
+                    ) : (
+                      <span className="ing-badge extra-price">+${ing.precioAdicional.toLocaleString()}</span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
           </div>
         )}
 

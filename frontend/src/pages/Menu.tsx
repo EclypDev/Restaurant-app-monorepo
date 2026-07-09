@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useCartStore from '../store/cartStore'
 import useInventoryStore from '../store/inventoryStore'
-import { IPlatillo, IPlatilloPredefinido, Alergeno } from '@shared'
+import { IPlatillo, Alergeno } from '@shared'
 import Cart from '../components/Cart'
 import PlatilloCard from '../components/PlatilloCard'
 import PlatilloModal from '../components/PlatilloModal'
@@ -13,7 +13,6 @@ import '../styles/Menu.css'
 export default function Menu() {
   const [searchParams] = useSearchParams()
   const [platillos, setPlatillos] = useState<IPlatillo[]>([])
-  const [platillosBase, setPlatillosBase] = useState<IPlatilloPredefinido[]>([])
   const [categorias, setCategorias] = useState<string[]>([])
   const [categoriaActiva, setCategoriaActiva] = useState<string | null>(null)
   const [selectedPlatillo, setSelectedPlatillo] = useState<IPlatillo | null>(null)
@@ -46,12 +45,8 @@ export default function Menu() {
 
   const fetchMenu = async () => {
     try {
-      const [menuRes, baseRes] = await Promise.all([
-        axios.get<IPlatillo[]>('/api/menu'),
-        axios.get<IPlatilloPredefinido[]>('/api/platillos'),
-      ])
+      const menuRes = await axios.get<IPlatillo[]>('/api/menu')
       setPlatillos(menuRes.data)
-      setPlatillosBase(baseRes.data)
       const uniqueCategorias = [...new Set(menuRes.data.map(p => p.categoria))]
       setCategorias(uniqueCategorias)
       if (uniqueCategorias.length > 0) {
@@ -72,15 +67,8 @@ export default function Menu() {
       if (tieneAlergeno) return false
     }
 
-    if (p.personalizable && p.opcionesSeleccionables) {
-      const tieneOpcionesDisponibles = p.opcionesSeleccionables.some(grupo =>
-        grupo.items.some(item => !ingredientesAgotados.has(item.ingredienteId || ''))
-      )
-      return tieneOpcionesDisponibles
-    }
-
     return true
-  }), [platillos, categoriaActiva, alergenosActivos, ingredientesAgotados])
+  }), [platillos, categoriaActiva, alergenosActivos])
 
   if (loading) {
     return <div className="loading">Cargando menú...</div>
@@ -92,9 +80,6 @@ export default function Menu() {
         <div className="container">
           <h1>🍽️ Nuestro Menú</h1>
           <div className="header-actions">
-            <button className="btn-create-plate" onClick={() => navigate(`/crear-plato?mesa=${mesaId}`)}>
-              + Crear Plato
-            </button>
             {mesaId && <span className="mesa-badge">📍 {mesaId}</span>}
           </div>
         </div>
@@ -139,26 +124,6 @@ export default function Menu() {
           platillo={selectedPlatillo}
           onClose={() => setSelectedPlatillo(null)}
         />
-      )}
-
-      {platillosBase.length > 0 && (
-        <section className="platos-base-section">
-          <h2>🧑‍🍳 Crea tu propio plato</h2>
-          <div className="platos-base-grid">
-            {platillosBase.filter(p => p.disponible).map(pb => (
-              <div
-                key={pb._id}
-                className="plato-base-card"
-                onClick={() => navigate(`/crear-plato?platillo=${pb._id}&mesa=${mesaId}`)}
-              >
-                <div className="plato-base-emoji">🍽️</div>
-                <h3>{pb.nombre}</h3>
-                <p>{pb.descripcion}</p>
-                <span className="plato-base-price">Desde ${pb.precioBase.toLocaleString()}</span>
-              </div>
-            ))}
-          </div>
-        </section>
       )}
 
       <Cart />

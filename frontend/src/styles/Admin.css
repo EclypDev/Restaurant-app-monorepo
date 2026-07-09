@@ -225,3 +225,103 @@
   justify-content: flex-end;
   margin-top: 10px;
 }
+
+.composicion-layout {
+  display: flex;
+  gap: 25px;
+  min-height: 400px;
+}
+
+.composicion-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.composicion-sidebar h4 {
+  margin-bottom: 10px;
+  color: var(--gray);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.composicion-platillo-btn {
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  text-align: left;
+  font-weight: 500;
+}
+
+.composicion-platillo-btn.active {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.composicion-main {
+  flex: 1;
+}
+
+.composicion-empty {
+  color: var(--gray);
+  padding: 40px;
+  text-align: center;
+}
+
+.comp-section {
+  margin-bottom: 30px;
+}
+
+.comp-section h5 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.group-desc {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-bottom: 12px;
+}
+
+.input-small {
+  width: 100px;
+  padding: 6px 10px;
+  border: 2px solid var(--gray-light);
+  border-radius: 6px;
+}
+
+.adiciones-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.adicion-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  background: var(--gray-light);
+  border: 2px solid transparent;
+  position: relative;
+  font-weight: 500;
+}
+
+.adicion-btn.activo {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.08);
+}
+
+.adicion-precio {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.check-badge {
+  color: var(--success);
+  font-weight: bold;
+  font-size: 1.1rem;
+}

@@ -10,7 +10,6 @@ router.get('/', asyncHandler(async (req: Request, res: Response) => {
   const { categoria, disponible } = req.query
   const where: any = {
     disponible: disponible !== 'false',
-    personalizable: false // Non-customizable menu items go to /menu
   }
   
   if (categoria) {

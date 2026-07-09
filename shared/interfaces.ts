@@ -13,6 +13,7 @@ export type { IngredienteCategoria } from './enums'
 
 export interface IIngrediente {
   _id: string
+  id: string
   nombre: string
   emoji: string
   precioAdicional: number
@@ -30,6 +31,7 @@ export interface IComposicionDefault {
   removible: boolean
   esBase?: boolean
   esProteina?: boolean
+  descuento?: number
 }
 
 export interface IPlatilloPredefinido {
@@ -108,6 +110,8 @@ export interface IPlatillo {
   itemsRelacionados?: string[]
   capasVisuales?: IVisualLayer[]
   imagenBase?: string
+  composicionPorDefecto?: IComposicionDefault[]
+  adicionesPermitidas?: string[]
   restauranteId?: string
   createdAt: string
   updatedAt: string

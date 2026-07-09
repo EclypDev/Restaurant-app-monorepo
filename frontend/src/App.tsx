@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Menu from './pages/Menu'
-import PlateCreator from './pages/PlateCreator'
 import Cocina from './pages/Cocina'
 import Mesero from './pages/Mesero'
 import Admin from './pages/Admin'
@@ -20,7 +19,6 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/menu" element={<Menu />} />
-                <Route path="/crear-plato" element={<PlateCreator />} />
                 <Route path="/order/:orderId" element={<OrderTracking />} />
                 <Route path="/cocina" element={<Cocina />} />
                 <Route path="/meseros" element={<Mesero />} />
