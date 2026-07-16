@@ -1,10 +1,13 @@
 import { create } from 'zustand'
 import { IOrderItem } from '@shared/interfaces'
+import axios from 'axios'
 
 interface CartState {
   items: IOrderItem[]
   mesaId: string | null
+  negocioId: string | null
   setMesaId: (mesaId: string) => void
+  setNegocioId: (negocioId: string) => void
   addItem: (item: IOrderItem) => void
   removeItem: (index: number) => void
   updateCantidad: (index: number, cantidad: number) => void
@@ -16,8 +19,16 @@ interface CartState {
 const useCartStore = create<CartState>((set, get) => ({
   items: [],
   mesaId: null,
+  negocioId: null,
 
   setMesaId: (mesaId: string) => set({ mesaId }),
+
+  setNegocioId: (negocioId: string) => {
+    set({ negocioId })
+    if (negocioId) {
+      axios.defaults.headers.common['x-negocio-id'] = negocioId
+    }
+  },
 
   addItem: (item: IOrderItem) => set((state) => {
     const existingIndex = state.items.findIndex(

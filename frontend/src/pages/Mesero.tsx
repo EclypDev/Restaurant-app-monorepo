@@ -22,12 +22,17 @@ export default function Mesero() {
   const { socket } = useSocket()
   const navigate = useNavigate()
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([])
+  const [pedidos, setPedidos] = useState<IOrden[]>([])
+  const [now, setNow] = useState(Date.now())
 
   useEffect(() => {
     if (!loading && (!user || !['mesero', 'cocina', 'admin'].includes(user.rol))) {
       navigate('/login')
       return
     }
+
+    const interval = setInterval(() => setNow(Date.now()), 60000)
+    fetchPedidos()
 
     if (!socket) return
 
@@ -41,7 +46,6 @@ export default function Mesero() {
         timestamp: new Date(),
         atendida: false,
       }, ...prev])
-      playNotificationSound()
     })
 
     socket.on('solicitud-mesero', (data: ISolicitudMeseroEvent) => {
@@ -52,21 +56,26 @@ export default function Mesero() {
         timestamp: new Date(),
         atendida: false,
       }, ...prev])
-      playNotificationSound()
+    })
+
+    socket.on('orden-actualizada', (updated: IOrden) => {
+      setPedidos(prev => prev.map(o => o.id === updated.id ? updated : o))
     })
 
     return () => {
       socket.off('solicitud-pago')
       socket.off('solicitud-mesero')
+      socket.off('orden-actualizada')
+      clearInterval(interval)
     }
   }, [user, loading, navigate, socket])
 
-  const playNotificationSound = () => {
+  const fetchPedidos = async () => {
     try {
-      const audio = new Audio('/notification.mp3')
-      audio.play().catch(() => {})
-    } catch {
-      // Audio not available
+      const { data } = await axios.get<{ ordenes: IOrden[] }>('/api/pedidos')
+      setPedidos(data.ordenes)
+    } catch (e) {
+      console.error('Error fetching pedidos', e)
     }
   }
 
@@ -88,13 +97,13 @@ export default function Mesero() {
   return (
     <div className="mesero-container">
       <header className="mesero-header">
-        <h2>🧑‍🍳 Solicitudes de Meseros</h2>
+        <h2>🧑‍🍳 Panel del Mesero</h2>
         <span className="user-info">{user?.nombre}</span>
       </header>
 
-      <div className="mesero-columns">
+      <div className="mesero-columns" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         <div className="mesero-column">
-          <h3>🔔 Activas ({activas.length})</h3>
+          <h3>🔔 Solicitudes ({activas.length})</h3>
           {activas.map(solicitud => (
             <SolicitudCard
               key={solicitud.id}
@@ -103,21 +112,28 @@ export default function Mesero() {
               onEliminar={() => eliminarSolicitud(solicitud.id)}
             />
           ))}
+          
+          <h3 style={{ marginTop: '30px' }}>📋 Pedidos</h3>
+          {pedidos.map(pedido => (
+            <PedidoCard
+              key={pedido.id}
+              pedido={pedido}
+              now={now}
+            />
+          ))}
         </div>
 
-        {atendidas.length > 0 && (
-          <div className="mesero-column">
-            <h3>✅ Atendidas ({atendidas.length})</h3>
-            {atendidas.map(solicitud => (
-              <SolicitudCard
-                key={solicitud.id}
-                solicitud={solicitud}
-                atendida
-                onEliminar={() => eliminarSolicitud(solicitud.id)}
-              />
-            ))}
-          </div>
-        )}
+        <div className="mesero-column">
+          <h3>✅ Atendidas ({atendidas.length})</h3>
+          {atendidas.map(solicitud => (
+            <SolicitudCard
+              key={solicitud.id}
+              solicitud={solicitud}
+              atendida
+              onEliminar={() => eliminarSolicitud(solicitud.id)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

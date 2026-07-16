@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { prisma } from '../config/prisma'
 import { authMiddleware, AuthRequest } from '../middleware/auth.middleware'
+import { TenantRequest } from '../middleware/tenant.middleware'
 import { asyncHandler, AppError } from '../middleware/error.middleware'
 import { OrderStatus } from '../../../shared/enums'
 import { OrderService } from '../services/order.service'
@@ -8,16 +9,28 @@ import { OrderService } from '../services/order.service'
 const router = Router()
 
 router.post('/', asyncHandler(async (req: Request, res: Response) => {
-  const { mesaId, items, totalPagar } = req.body
+  const { mesaId, items, totalPagar, usuarioId, usuarioNombre } = req.body
   if (!mesaId || !items || !totalPagar) throw new AppError('Missing required fields', 400)
   
-  const nuevaOrden = await OrderService.createOrder(req.body, req.app.get('io'))
+  const tenantReq = req as TenantRequest
+  const authReq = req as AuthRequest
+  const bodyData = {
+    ...req.body,
+    negocioId: tenantReq.negocioId || 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
+    usuarioId: usuarioId || authReq.user?.id || undefined,
+    usuarioNombre: usuarioNombre || authReq.user?.nombre || undefined,
+  }
+  
+  const nuevaOrden = await OrderService.createOrder(bodyData, req.app.get('io'))
   res.status(201).json({ success: true, orden: nuevaOrden })
 }))
 
 router.get('/', authMiddleware, asyncHandler(async (req: AuthRequest, res: Response) => {
+  const tenantReq = req as unknown as TenantRequest
   const { estado, mesaId, page = '1', limit = '50' } = req.query
-  const where: any = {}
+  const where: any = {
+    negocioId: tenantReq.negocioId || req.user?.negocioId || 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
+  }
   
   if (estado) {
     const estados = (estado as string).split(',').map(s => s.trim()).filter(Boolean)
@@ -59,7 +72,13 @@ router.patch('/:id/estado', authMiddleware, asyncHandler(async (req: AuthRequest
 }))
 
 router.get('/:id', asyncHandler(async (req: Request, res: Response) => {
-  const orden = await prisma.orden.findUnique({ where: { id: req.params.id } })
+  const tenantReq = req as TenantRequest
+  const orden = await prisma.orden.findFirst({
+    where: {
+      id: req.params.id,
+      negocioId: tenantReq.negocioId || 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
+    }
+  })
   if (!orden) {
     throw new AppError('Order not found', 404)
   }

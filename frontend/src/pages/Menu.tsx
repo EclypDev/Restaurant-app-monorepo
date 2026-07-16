@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useParams } from 'react-router-dom'
 import axios from 'axios'
 import useCartStore from '../store/cartStore'
 import useInventoryStore from '../store/inventoryStore'
@@ -84,16 +84,28 @@ interface InteractiveMesa {
   estado: 'OCUPADA' | 'DISPONIBLE'
 }
 
+interface NegocioConfig {
+  id: string
+  nombre: string
+  logo?: string
+  colorPrimario: string
+  colorFondo: string
+}
+
 export default function Menu() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const { negocioId: qrNegocioId, mesaId: qrMesaId } = useParams<{ negocioId: string; mesaId: string }>()
   const [selectedPlatillo, setSelectedPlatillo] = useState<IPlatillo | null>(null)
+  const [negocioConfig, setNegocioConfig] = useState<NegocioConfig | null>(null)
   
   const setMesaId = useCartStore((state) => state.setMesaId)
+  const setNegocioId = useCartStore((state) => state.setNegocioId)
   const mesaId = useCartStore((state) => state.mesaId)
   const fetchInventory = useInventoryStore((state) => state.fetchInventory)
   const initSocket = useInventoryStore((state) => state.initSocket)
 
-  const defaultMesa = searchParams.get('mesa') || 'Mesa 2'
+  // Extract mesa from QR URL (/n/:negocioId/mesa/:mesaId) or legacy param (?mesa=)
+  const defaultMesa = qrMesaId || searchParams.get('mesa') || 'Mesa 2'
 
   const [mesasStatus, setMesasStatus] = useState<InteractiveMesa[]>([
     { id: 'm1', numero: 'Mesa 1', estado: 'OCUPADA' },
@@ -104,6 +116,17 @@ export default function Menu() {
   ])
 
   useEffect(() => {
+    if (qrNegocioId) {
+      setNegocioId(qrNegocioId)
+      // Fetch negocio config for dynamic theming
+      axios.get<NegocioConfig>(`/api/negocios/id/${qrNegocioId}`)
+        .then(({ data }) => {
+          setNegocioConfig(data)
+          document.documentElement.style.setProperty('--color-primario', data.colorPrimario)
+          document.documentElement.style.setProperty('--color-fondo', data.colorFondo)
+        })
+        .catch(() => {})
+    }
     if (defaultMesa) {
       setMesaId(defaultMesa)
     }
@@ -113,7 +136,7 @@ export default function Menu() {
     return () => {
       useInventoryStore.getState().cleanup()
     }
-  }, [defaultMesa, setMesaId, fetchInventory, initSocket])
+  }, [qrNegocioId, defaultMesa, setNegocioId, setMesaId, fetchInventory, initSocket])
 
   const currentSelectedMesa = useMemo(() => {
     return mesasStatus.find(m => m.numero === mesaId) || mesasStatus[1]
@@ -138,7 +161,7 @@ export default function Menu() {
               alt="Plato y Cubiertos" 
               className="header-icon-image"
             />
-            <h1>Nuestro Menú</h1>
+            <h1>{negocioConfig?.nombre || 'Nuestro Menú'}</h1>
           </div>
         </div>
       </header>

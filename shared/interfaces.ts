@@ -1,6 +1,8 @@
 import type {
   OrderStatus,
+  OrderSource,
   UserRole,
+  TokenType,
   PaymentMethod,
   ReviewCategory,
   TimeUnit,
@@ -10,6 +12,34 @@ import type {
 
 export type { Alergeno } from './enums'
 export type { IngredienteCategoria } from './enums'
+
+export interface IRegistroSaaSRequest {
+  negocioNombre: string
+  slug: string
+  adminNombre: string
+  email: string
+  password: string
+}
+
+export interface ISolicitarRecuperacionRequest {
+  email: string
+}
+
+export interface IRestablecerPasswordRequest {
+  token: string
+  nuevaPassword: string
+}
+
+export interface IVerificarCorreoRequest {
+  token: string
+}
+
+export interface IAdicional {
+  id: string
+  nombre: string
+  precio: number
+  cantidad?: number
+}
 
 export interface IIngrediente {
   _id: string
@@ -130,6 +160,8 @@ export interface IOrderItem {
   eleccionUsuario?: IEleccionUsuario[]
   notasEspeciales?: string
   estructuraPlatoFinal?: IEstructuraPlatoFinal
+  notas?: string
+  adicionales?: IAdicional[]
 }
 
 export interface ISolicitudPago {
@@ -140,13 +172,17 @@ export interface ISolicitudPago {
 }
 
 export interface IOrden {
-  _id: string
+  id: string
+  negocioId: string
   mesaId: string
   estado: OrderStatus
+  origen: OrderSource
+  orderNumber: string
   items: IOrderItem[]
   totalPagar: number
+  usuarioId?: string
+  usuarioNombre?: string
   restauranteId?: string
-  entregadoAt?: string | Date
   solicitudPago?: ISolicitudPago
   metodoPago?: PaymentMethod
   pagado: boolean

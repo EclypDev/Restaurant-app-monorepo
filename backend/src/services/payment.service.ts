@@ -72,8 +72,6 @@ export class PaymentService {
       where: { id },
       data: {
         pagado: true,
-        pagadoAt: new Date(),
-        metodoPago: metodoPago,
         solicitudPago: updatedSolicitud as any
       }
     })

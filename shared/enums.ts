@@ -1,14 +1,26 @@
 export enum OrderStatus {
   PENDING = 'PENDIENTE',
   IN_PREPARATION = 'EN_PREPARACION',
+  LISTO = 'LISTO',
   DELIVERED = 'ENTREGADO',
+  PAGADO = 'PAGADO',
   CANCELLED = 'CANCELADO',
+}
+
+export enum OrderSource {
+  QR_CLIENTE = 'QR_CLIENTE',
+  MESERO_APP = 'MESERO_APP',
 }
 
 export enum UserRole {
   ADMIN = 'admin',
   KITCHEN = 'cocina',
   WAITER = 'mesero',
+}
+
+export enum TokenType {
+  VERIFICACION_EMAIL = 'VERIFICACION_EMAIL',
+  RECUPERACION_PASSWORD = 'RECUPERACION_PASSWORD',
 }
 
 export enum PaymentMethod {

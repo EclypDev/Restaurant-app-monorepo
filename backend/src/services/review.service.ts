@@ -8,10 +8,12 @@ export class ReviewService {
     estrellas: number
     comentario?: string
     categoria?: string
+    negocioId?: string
   }, io: any) {
     const resena = await prisma.resena.create({
       data: {
         ...data,
+        negocioId: data.negocioId || 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
         esPublica: data.estrellas >= 4,
       }
     })

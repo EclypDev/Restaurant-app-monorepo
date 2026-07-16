@@ -15,11 +15,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null)
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
     const s = io('/', {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+      auth: { token },
     })
     setSocket(s)
     return () => { s.disconnect() }

@@ -33,7 +33,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token])
 
-  const autoLogin = async (retries = 3) => {
+  const autoLogin = async () => {
+    // Si ya hay un token en localStorage (de un login real), intentar usarlo
+    const existingToken = localStorage.getItem('token')
+    if (existingToken) {
+      setToken(existingToken)
+      return
+    }
+
     // Modo desarrollo: usamos token especial bypass
     localStorage.setItem('token', 'dev-bypass-token')
     setToken('dev-bypass-token')
@@ -47,8 +54,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { data } = await axios.get<User>('/api/auth/me')
       setUser(data)
-    } catch {
-      logout()
+    } catch (err: any) {
+      // Solo cerrar sesión si el backend responde con 401 (token inválido)
+      if (err?.response?.status === 401) {
+        logout()
+      }
+      // Si el backend está caído (reload), mantener sesión actual
     } finally {
       setLoading(false)
     }

@@ -12,7 +12,7 @@ interface InventoryState {
   cleanup: () => void
 }
 
-const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000')
+const socket = io()
 
 const useInventoryStore = create<InventoryState>((set) => ({
   ingredientes: [],

@@ -1,0 +1,472 @@
+
+> backend@1.0.0 dev
+> nodemon --watch src --watch ../shared --ext ts,js,json --exec "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts"
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src\**\* ..\shared\**\*[39m
+[33m[nodemon] watching extensions: ts,js,json[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:22:12 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: bsp8gYGh25KLqE9qAAAC
+🔌 Client connected: ZbiG1TMqf3d4gKmIAAAD
+❌ Client disconnected: bsp8gYGh25KLqE9qAAAC
+🔌 Client connected: Vn-iGkQZGuNFtKeRAAAF
+[0mGET /api/auth/me [36m304[0m 3.594 ms - -[0m
+[0mGET /api/auth/me [36m304[0m 0.606 ms - -[0m
+🔌 Client connected: bhoRizG6-9KY0JRLAAAH
+[0mGET /health [32m200[0m 0.942 ms - 71[0m
+❌ Client disconnected: ZbiG1TMqf3d4gKmIAAAD
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:28:54 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:28:56 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:29:07 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\server.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:29:09 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: E281kjV9Py9ucxh9AAAC
+🔌 Client connected: pNojz-CH2D8etN2-AAAD
+[INFO] 16:29:15 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\server.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:29:16 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:29:18 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:30:47 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+[0mGET /api/auth/me [32m200[0m 2.774 ms - 114[0m
+🔌 Client connected: 4LsIF3gol7nMMsqMAAAB
+🔌 Client connected: wXKuDWrzDAdGflGuAAAD
+[INFO] 16:31:01 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\order.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:31:03 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:31:05 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:31:10 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\order.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:31:11 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:31:14 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:31:32 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\order.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:31:34 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:31:36 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:31:43 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\menu.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:31:45 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:31:47 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:32:12 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\table.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:32:14 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: vBiAtZI6yngI5vvyAAAB
+🔌 Client connected: QJL90EGG_46nisaGAAAD
+[INFO] 16:32:29 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\table.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:32:31 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: 9-cdD1EWJUR9YVQFAAAC
+🔌 Client connected: rLAUmQ9oFQeyLQnVAAAD
+[INFO] 16:32:51 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\auth.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:32:52 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:32:54 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:32:59 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\auth.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:33:00 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:33:03 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:33:13 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: dX8yE6OKNVU_W417AAAB
+🔌 Client connected: Do0-KLe1nr6NLm5JAAAD
+❌ Client disconnected: dX8yE6OKNVU_W417AAAB
+❌ Client disconnected: Do0-KLe1nr6NLm5JAAAD
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:42:00 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+[0mGET /api/auth/me [32m200[0m 3.606 ms - 114[0m
+🔌 Client connected: gkMhryMdu25hXCevAAAB
+[INFO] 16:42:07 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\server.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:42:08 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: xled4XSdlWD6XV3WAAAB
+[INFO] 16:42:14 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\server.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:42:16 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 16:42:18 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 16:42:24 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\tenant.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:42:25 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: DvQIri1e0XbY-BXUAAAB
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 16:43:25 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+🚀 Backend running on port 4000
+📡 Health check: http://localhost:4000/health
+🔌 Client connected: IFwO4VzFbO2pWOAuAAAB
+[INFO] 17:38:43 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:38:45 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:38:48 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 17:38:54 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:38:55 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:38:57 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 17:39:04 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\auth.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:39:06 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:39:08 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 17:39:57 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\shared\enums.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:39:59 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:40:02 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:40:17 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:40:19 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:40:30 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:40:32 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:42:46 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:42:51 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 17:43:06 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:43:09 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:43:14 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 17:43:24 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\auth.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:43:27 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:43:32 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:46:18 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:46:24 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 17:59:46 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\menu.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 17:59:49 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 17:59:54 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 18:19:33 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 18:19:37 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 18:19:42 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\server.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 18:19:46 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 18:19:50 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 18:19:56 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\server.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 18:19:59 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 18:20:04 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[INFO] 19:31:20 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\negocio.routes.ts has been modified
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 19:31:22 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 19:31:25 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 19:36:27 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\auth.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 19:36:29 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 19:36:32 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 19:38:57 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 19:38:59 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 19:39:02 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 19:39:24 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 19:39:25 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 19:39:28 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:01:47 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\auth.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:01:49 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:01:51 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:02:05 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:02:06 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:02:08 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:02:14 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:02:15 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:02:18 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:02:49 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\config\env.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:02:51 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:02:53 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:03:02 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\categoria.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:03:04 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:03:06 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:13:48 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\shared\enums.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:13:51 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:13:56 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:14:16 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\order.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:14:19 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:14:23 Error: listen EADDRINUSE: address already in use :::4000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:14:45 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:14:49 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:23:55 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\config\prisma.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:23:59 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:24:03 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:24:14 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\auth.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:24:17 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:24:21 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:24:44 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\auth.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:24:47 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:24:52 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:25:12 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\auth.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:25:15 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:25:20 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:25:29 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\auth.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:25:32 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:25:38 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:37:50 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:37:54 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:37:59 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:38:06 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:38:09 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:38:14 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:38:21 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:38:24 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:38:29 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:38:35 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:38:38 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:38:42 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:38:49 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:38:52 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:38:56 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:39:04 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:39:06 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:39:11 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:39:18 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\seed.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:39:21 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:39:25 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:39:47 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:39:50 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:39:55 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:40:49 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\auth.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:40:53 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:40:58 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:41:04 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\middleware\auth.middleware.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:41:07 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:41:12 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:41:48 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\negocio.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:41:51 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:41:55 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:42:18 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\payment.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:42:20 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:42:25 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:42:45 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\review.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:42:48 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:42:53 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:43:34 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\payment.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:43:37 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:43:41 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:43:48 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\services\review.service.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:43:51 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:43:56 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 20:44:32 Restarting: C:\Users\EclypDev\Desktop\Restaurante App\Restaurant-app-monorepo\backend\src\routes\review.routes.ts has been modified
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts`[39m
+[INFO] 20:44:35 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+✅ Prisma connected to PostgreSQL
+[ERROR] 20:44:40 Error: listen EADDRINUSE: address already in use :::4000

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, createContext, useContext } from 'react'
+import { useState, useCallback, useRef, createContext, useContext } from 'react'
 
 interface ToastMessage {
   id: number
@@ -18,10 +18,10 @@ export function useToast() {
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<ToastMessage[]>([])
-  let nextId = 0
+  const nextIdRef = useRef(0)
 
   const toast = useCallback((text: string, type: 'success' | 'error' | 'info' = 'info') => {
-    const id = nextId++
+    const id = nextIdRef.current++
     setMessages(prev => [...prev, { id, text, type }])
     setTimeout(() => {
       setMessages(prev => prev.filter(m => m.id !== id))

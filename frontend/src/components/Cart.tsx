@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { IRecomendacion } from '@shared'
 import { useToast } from './Toast'
+import { useAuth } from '../context/AuthContext'
 import '../styles/Cart.css'
 
 export default function Cart() {
@@ -17,6 +18,7 @@ export default function Cart() {
   const addItem = useCartStore((state) => state.addItem)
   const navigate = useNavigate()
   const { toast } = useToast()
+  const { user } = useAuth()
 
   const [isOpen, setIsOpen] = useState(false)
   const [recomendaciones, setRecomendaciones] = useState<IRecomendacion[]>([])
@@ -54,6 +56,7 @@ export default function Cart() {
   }
 
   const handleCheckout = async () => {
+    console.log('[Cart] handleCheckout called', { mesaId, itemsLength: items.length, total: getTotal() })
     if (!mesaId) {
       toast('No se detectó el número de mesa. Por favor, selecciona una mesa disponible en el mapa.', 'error')
       return
@@ -64,11 +67,15 @@ export default function Cart() {
         mesaId,
         items,
         totalPagar: getTotal(),
-      })
+        usuarioId: user?.id || undefined,
+        usuarioNombre: user?.nombre || undefined,
+      }, { timeout: 15000 })
 
       clearCart()
-      navigate(`/order/${data.orden._id}`)
-    } catch {
+      toast('Pedido creado exitosamente', 'success')
+      navigate(`/order/${data.orden.id}`)
+    } catch (err: any) {
+      console.error('[Cart] checkout error:', err?.response?.data || err?.message || err)
       toast('Error al crear el pedido', 'error')
     }
   }

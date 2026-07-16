@@ -23,7 +23,7 @@ export default function OrderTracking() {
     if (!socket) return
 
     socket.on('orden-actualizada', (updated: IOrden) => {
-      if (updated._id === orderId) {
+      if (updated.id === orderId) {
         setOrden(updated)
         if (updated.pagado) {
           setShowReview(true)
@@ -88,7 +88,7 @@ export default function OrderTracking() {
     <div className="tracking-container">
       <div className="tracking-card">
         <h2>📍 Mesa {orden.mesaId}</h2>
-        <p className="order-id">Orden #{orden._id.slice(-6)}</p>
+        <p className="order-id">Orden #{orden.id.slice(-6)}</p>
 
         <div className="tracking-steps">
           {steps.map((step, idx) => (
@@ -176,7 +176,7 @@ export default function OrderTracking() {
       {showReview && (
         <ReviewModal
           mesaId={orden.mesaId}
-          ordenId={orden._id}
+          ordenId={orden.id}
           onClose={() => setShowReview(false)}
         />
       )}

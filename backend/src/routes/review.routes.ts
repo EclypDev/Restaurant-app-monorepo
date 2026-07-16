@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express'
 import { authMiddleware, requireRole, AuthRequest } from '../middleware/auth.middleware'
+import { TenantRequest } from '../middleware/tenant.middleware'
 import { UserRole } from '../../../shared/enums'
 import { asyncHandler, AppError } from '../middleware/error.middleware'
 import { ReviewService } from '../services/review.service'
@@ -9,7 +10,9 @@ const router = Router()
 router.post('/', asyncHandler(async (req: Request, res: Response) => {
   const { mesaId, estrellas } = req.body
   if (!mesaId || !estrellas) throw new AppError('Missing required fields', 400)
-  const resena = await ReviewService.create(req.body, req.app.get('io'))
+  const tenantReq = req as TenantRequest
+  const bodyWithTenant = { ...req.body, negocioId: tenantReq.negocioId || 'ce36eb74-8f9a-4256-9519-08fd14e5be28' }
+  const resena = await ReviewService.create(bodyWithTenant, req.app.get('io'))
   res.status(201).json({ success: true, resena, esPositiva: estrellas >= 4 })
 }))
 

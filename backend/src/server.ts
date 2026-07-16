@@ -1,13 +1,13 @@
 import './config/env'
 import express, { Application, Request, Response } from 'express'
-console.log("¡DEBUG: EL SERVIDOR ESTA ARRANCANDO!")
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
-// import { connectDatabase } from './config/database'
+import { connectDatabase, disconnectDatabase } from './config/prisma'
 import { errorHandler, notFoundHandler } from './middleware/error.middleware'
+import { tenantMiddleware } from './middleware/tenant.middleware'
 import { SeedService } from './services/seed.service'
 
 import menuRoutes from './routes/menu.routes'
@@ -19,6 +19,8 @@ import inventoryRoutes from './routes/inventory.routes'
 import recommendationsRoutes from './routes/recommendations.routes'
 import reviewRoutes from './routes/review.routes'
 import paymentRoutes from './routes/payment.routes'
+import negocioRoutes from './routes/negocio.routes'
+import categoriaRoutes from './routes/categoria.routes'
 
 dotenv.config()
 
@@ -31,6 +33,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(morgan('dev'))
+app.use(tenantMiddleware)
 
 // Health check endpoint (always available, even without DB)
 app.get('/health', (_req: Request, res: Response) => {
@@ -52,6 +55,8 @@ app.use('/api/inventario', inventoryRoutes)
 app.use('/api/recomendaciones', recommendationsRoutes)
 app.use('/api/resenas', reviewRoutes)
 app.use('/api/pago', paymentRoutes)
+app.use('/api/negocios', negocioRoutes)
+app.use('/api/categorias', categoriaRoutes)
 
 // 404 handler (must be after all routes)
 app.use(notFoundHandler)
@@ -99,8 +104,7 @@ app.set('io', io)
 process.on('SIGTERM', async () => {
   console.log('🛑 SIGTERM received, shutting down gracefully...')
   server.close(async () => {
-  // const { disconnectDatabase } = await import('./config/database')
-  // await disconnectDatabase()
+    await disconnectDatabase()
     process.exit(0)
   })
 })
@@ -117,9 +121,13 @@ process.on('unhandledRejection', (reason) => {
 const PORT = process.env.PORT || 4000
 
 async function start() {
-  // await connectDatabase(process.env.MONGODB_URI || 'in-memory')
-  await SeedService.seedDefaultUsers()
-  await SeedService.seedDefaultData()
+  await connectDatabase()
+  
+  // Seed en background para no bloquear el startup
+  Promise.all([
+    SeedService.seedDefaultUsers().catch(() => {}),
+    SeedService.seedDefaultData().catch(() => {}),
+  ])
   
   server.listen(PORT, () => {
     console.log(`🚀 Backend running on port ${PORT}`)
@@ -131,5 +139,3 @@ start().catch((error) => {
   console.error('Failed to start server:', error)
   process.exit(1)
 })
-
-// Trigger nodemon restart

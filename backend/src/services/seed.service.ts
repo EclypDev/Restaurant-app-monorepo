@@ -13,9 +13,9 @@ export class SeedService {
 
         await prisma.usuario.createMany({
           data: [
-            { nombre: 'Administrador', email: 'admin@restaurante.com', password: hashedPasswordAdmin, rol: 'admin' },
-            { nombre: 'Cocina', email: 'cocina@restaurante.com', password: hashedPasswordCocina, rol: 'cocina' },
-            { nombre: 'Mesero', email: 'mesero@restaurante.com', password: hashedPasswordMesero, rol: 'mesero' },
+            { nombre: 'Administrador', email: 'admin@restaurante.com', password: hashedPasswordAdmin, rol: 'admin', negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28', emailVerificado: true },
+            { nombre: 'Cocina', email: 'cocina@restaurante.com', password: hashedPasswordCocina, rol: 'cocina', negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28', emailVerificado: true },
+            { nombre: 'Mesero', email: 'mesero@restaurante.com', password: hashedPasswordMesero, rol: 'mesero', negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28', emailVerificado: true },
           ]
         })
         console.log('✅ Default users created')
@@ -72,7 +72,7 @@ export class SeedService {
             { id: 'ing_mayonesa', nombre: 'Mayonesa', emoji: '🥄', precioAdicional: 500, alergenos: ['huevos'], categoria: 'extra', stockDisponible: true },
             { id: 'ing_mostaza', nombre: 'Mostaza Miel', emoji: '🟡', precioAdicional: 500, alergenos: ['mostaza'], categoria: 'extra', stockDisponible: true },
             { id: 'ing_crema', nombre: 'Crema Agria', emoji: '🥛', precioAdicional: 800, alergenos: ['lactosa'], categoria: 'extra', stockDisponible: true },
-          ]
+          ].map(i => ({ ...i, negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28' }))
         })
         console.log('✅ Ingredients created (28 total)')
       }
@@ -83,6 +83,7 @@ export class SeedService {
         await prisma.platillo.create({
           data: {
             id: 'plat_hamburguesa_clasica',
+            negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
             nombre: 'Hamburguesa Clásica',
             descripcion: 'Hamburguesa tradicional con carne de res, lechuga, tomate y cebolla',
             precioBase: 12000,
@@ -104,6 +105,7 @@ export class SeedService {
         await prisma.platillo.create({
           data: {
             id: 'plat_hamburguesa_premium',
+            negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
             nombre: 'Hamburguesa Premium',
             descripcion: 'Hamburguesa gourmet con pan artesanal, queso y tocino',
             precioBase: 18000,
@@ -125,6 +127,7 @@ export class SeedService {
         await prisma.platillo.create({
           data: {
             id: 'plat_sandwich_pollo',
+            negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
             nombre: 'Sandwich de Pollo',
             descripcion: 'Pollo crispy con lechuga y tomate en pan brioche',
             precioBase: 13000,
@@ -144,6 +147,7 @@ export class SeedService {
         await prisma.platillo.create({
           data: {
             id: 'plat_tacos',
+            negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
             nombre: 'Tacos de Cerdo',
             descripcion: 'Tacos con cerdo pulled, cebolla y cilantro en tortilla de harina',
             precioBase: 11000,
@@ -162,6 +166,7 @@ export class SeedService {
         await prisma.platillo.create({
           data: {
             id: 'plat_bowl_ensalada',
+            negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
             nombre: 'Bowl Ensalada',
             descripcion: 'Bowl fresco y saludable con proteína a elección',
             precioBase: 14000,
@@ -183,6 +188,7 @@ export class SeedService {
         await prisma.platillo.create({
           data: {
             id: 'plat_bowl_vegetariano',
+            negocioId: 'ce36eb74-8f9a-4256-9519-08fd14e5be28',
             nombre: 'Bowl Vegetariano',
             descripcion: 'Bowl 100% vegetal con proteína plant-based y guarniciones frescas',
             precioBase: 13000,

@@ -7,30 +7,88 @@ datasource db {
   provider = "postgresql"
 }
 
-model Usuario {
+model Negocio {
+  id           String   @id @default(uuid())
+  nombre       String
+  slug         String   @unique
+  logo         String?
+  telefono     String?
+  colorPrimario String  @default("#ff6b35")
+  colorFondo   String   @default("#0a0e17")
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  usuarios     Usuario[]
+  mesas        Mesa[]
+  categorias   Categoria[]
+  platillos    Platillo[]
+  ingredientes Ingrediente[]
+  ordenes      Orden[]
+  resenas      Resena[]
+}
+
+model Categoria {
   id        String   @id @default(uuid())
+  negocioId String
   nombre    String
-  email     String   @unique
-  password  String
-  rol       String
-  activo    Boolean  @default(true)
+  orden     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  negocio  Negocio   @relation(fields: [negocioId], references: [id])
+
+  @@unique([negocioId, nombre])
+}
+
+model Usuario {
+  id              String   @id @default(uuid())
+  negocioId       String
+  nombre          String
+  email           String
+  password        String
+  rol             String
+  activo          Boolean  @default(true)
+  emailVerificado Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  negocio Negocio  @relation(fields: [negocioId], references: [id])
+  tokens  Token[]
+
+  @@unique([email, negocioId])
+}
+
+model Token {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  tipo      String
+  expiraEn  DateTime
+  usado     Boolean  @default(false)
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Mesa {
   id            String   @id @default(uuid())
-  numero        String   @unique
+  negocioId     String
+  numero        String
   nombre        String?
   capacidad     Int?
   activa        Boolean  @default(true)
   qrCode        String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  negocio Negocio @relation(fields: [negocioId], references: [id])
+
+  @@unique([negocioId, numero])
 }
 
 model Platillo {
   id                String   @id @default(uuid())
+  negocioId         String
   nombre            String
   descripcion       String?
   precioBase        Float
@@ -46,10 +104,13 @@ model Platillo {
   adicionesPermitidas Json?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  negocio Negocio @relation(fields: [negocioId], references: [id])
 }
 
 model Ingrediente {
   id              String   @id @default(uuid())
+  negocioId       String
   nombre          String
   emoji           String
   precioAdicional Float
@@ -58,22 +119,32 @@ model Ingrediente {
   stockDisponible Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  negocio Negocio @relation(fields: [negocioId], references: [id])
 }
 
 model Orden {
   id            String   @id @default(uuid())
+  negocioId     String
   mesaId        String
   estado        String
+  origen        String   @default("QR_CLIENTE")
+  orderNumber   String
   items         Json
   totalPagar    Float
+  usuarioId     String?
+  usuarioNombre String?
   pagado        Boolean  @default(false)
   solicitudPago Json?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  negocio Negocio @relation(fields: [negocioId], references: [id])
 }
 
 model Resena {
   id             String   @id @default(uuid())
+  negocioId      String
   mesaId         String
   ordenId        String?
   estrellas      Int
@@ -84,4 +155,6 @@ model Resena {
   respuestaAdmin String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  negocio Negocio @relation(fields: [negocioId], references: [id])
 }
